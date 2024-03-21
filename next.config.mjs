@@ -1,4 +1,15 @@
+import nodeExternals from 'webpack-node-externals';
+
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+  webpack: (config, { isServer }) => {
+    // Only run the package exclusion on the server
+    if (isServer) {
+      config.externals = ['onnxruntime-node', ...config.externals];
+    }
+
+    return config;
+  },
+};
 
 export default nextConfig;

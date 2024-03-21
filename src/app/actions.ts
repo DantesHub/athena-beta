@@ -1,12 +1,71 @@
-// 'use server'
+'use server'
 
-// import { revalidatePath } from 'next/cache'
-// import { redirect } from 'next/navigation'
+import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
 // import { kv } from '@vercel/kv'
-
 // import { auth } from '@/auth'
-// import { type Chat } from '@/lib/types'
+import { useAIState } from 'ai/rsc'
+import { ObsidianLoader } from "langchain/document_loaders/fs/obsidian"; 
+import { Chroma } from "@langchain/community/vectorstores/chroma";
+import { OpenAIEmbeddings } from "@langchain/openai";
 
+import { type Chat } from '@/lib/types'
+
+
+export async function initializeObsidianIndex() {
+  try {
+    console.log('Before loading obsidian');
+    const loader = new ObsidianLoader(
+      '/Users/dantekim/Documents/Areas/PKM/JARVIS/🌎 Atlas/Sources 📥/athena'
+    );
+    
+    console.log('Before loading docs');
+    const docs = await loader.load();
+    console.log('After loading docs', docs.length);
+
+    const docsWithContent = docs.filter(doc => doc && doc.pageContent && doc.pageContent.trim() !== '');
+    console.log('After filtering docs', docsWithContent.length);
+
+    const embedder = new OpenAIEmbeddings({
+      openAIApiKey: process.env.OPENAI_API_KEY,
+    });
+    const documentsToEmbed = docsWithContent
+      .filter(doc => doc && doc.pageContent && doc.pageContent.trim() !== '')
+      .map(doc => ({
+        pageContent: doc.pageContent,
+        metadata: doc.metadata,
+      }));
+    console.log('Documents to embed:', documentsToEmbed.length);
+
+    const texts = documentsToEmbed.map(doc => doc.pageContent);
+    console.log('Texts to embed:', texts.length);
+
+    const embeddings = await embedder.embedDocuments(texts);
+    console.log('Embeddings generated:', embeddings.length);
+
+    if (embeddings.length !== documentsToEmbed.length) {
+      throw new Error('Mismatch between the number of embeddings and documents');
+    }
+
+    const documents = documentsToEmbed.map((doc, index) => ({
+      pageContent: doc.pageContent,
+      embedding: embeddings[index],
+      metadata: doc.metadata,
+    }));
+
+    const vectorStore = await Chroma.fromDocuments(documents, embedder, {
+      collectionName: 'obsidian_docs',
+    });
+
+    const [aiState, setAIState] = useAIState();
+    setAIState({ ...aiState, obsidianVectorStore: vectorStore });
+
+    console.log('Obsidian index initialized successfully.');
+  } catch (error) {
+    console.error('Error initializing Obsidian index:', error);
+    // Handle the error appropriately (e.g., show an error message to the user)
+  }
+}
 // export async function getChats(userId?: string | null) {
 //   if (!userId) {
 //     return []
@@ -154,3 +213,6 @@
 //     .map(key => (process.env[key] ? '' : key))
 //     .filter(key => key !== '')
 // }
+
+
+

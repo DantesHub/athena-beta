@@ -1,6 +1,8 @@
 'use client'
 // import { useLocalStorage } from '@/lib/hooks/use-local-storage'
-import { useEffect, useState } from 'react'
+import * as React from 'react'
+import { initializeObsidianIndex } from '@/app/actions'
+import { useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { Session } from '@/lib/types'
 import { Message } from '@/lib/chat/actions'
@@ -10,6 +12,12 @@ import { useUIState } from 'ai/rsc'
 import { EmptyScreen } from '@/components/empty-screen'
 import { ChatScrollAnchor } from '@/components/chat/chat-scroll-anchor'
 import { ChatPanel } from './chat-panel'
+import { cache } from 'react'
+
+const loadIndex = cache(async () => {
+  console.log("brokies")
+  return await initializeObsidianIndex()
+})
 
 export interface ChatProps extends React.ComponentProps<'div'> {
     initialMessages?: Message[]
@@ -18,7 +26,6 @@ export interface ChatProps extends React.ComponentProps<'div'> {
     missingKeys: string[]
   }
 
-  
 export function Chat({ id, className, session, missingKeys }: ChatProps) {
     const router = useRouter()
     const path = usePathname()
@@ -28,6 +35,20 @@ export function Chat({ id, className, session, missingKeys }: ChatProps) {
     const isLoading = true
 
 
+    React.useEffect(() => {
+      const loadIndexAsync = async () => {
+        console.log("Before loading index")
+        try {
+          await loadIndex();
+          console.log("After loading index")
+        } catch (error) {
+          console.error("Error loading index:", error)
+        }
+      };
+      loadIndexAsync();
+    }, [])
+  
+  
     return (
         <>
           <div className={cn('pb-[200px] pt-4 md:pt-10', className)}>

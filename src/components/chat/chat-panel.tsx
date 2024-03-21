@@ -11,6 +11,7 @@ import type { AI } from '@/lib/chat/actions'
 import { nanoid } from 'nanoid'
 // import { UserMessage } from './stocks/message'
 
+
 export interface ChatPanelProps {
   id?: string
   title?: string
