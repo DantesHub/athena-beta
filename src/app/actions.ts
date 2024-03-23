@@ -4,12 +4,13 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 // import { kv } from '@vercel/kv'
 // import { auth } from '@/auth'
-import { useAIState } from 'ai/rsc'
+import { useAIState, useUIState} from 'ai/rsc'
 import { ObsidianLoader } from "langchain/document_loaders/fs/obsidian"; 
 import { Chroma } from "@langchain/community/vectorstores/chroma";
 import { OpenAIEmbeddings } from "@langchain/openai";
-
+import { Pinecone } from '@pinecone-database/pinecone';
 import { type Chat } from '@/lib/types'
+import { PineconeStore } from "@langchain/pinecone";
 
 
 export async function initializeObsidianIndex() {
@@ -27,21 +28,18 @@ export async function initializeObsidianIndex() {
     console.log('After filtering docs', docsWithContent.length);
 
     const embedder = new OpenAIEmbeddings({
-      openAIApiKey: process.env.OPENAI_API_KEY,
+      openAIApiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
     });
+
     const documentsToEmbed = docsWithContent
       .filter(doc => doc && doc.pageContent && doc.pageContent.trim() !== '')
       .map(doc => ({
         pageContent: doc.pageContent,
         metadata: doc.metadata,
       }));
-    console.log('Documents to embed:', documentsToEmbed.length);
 
     const texts = documentsToEmbed.map(doc => doc.pageContent);
-    console.log('Texts to embed:', texts.length);
-
     const embeddings = await embedder.embedDocuments(texts);
-    console.log('Embeddings generated:', embeddings.length);
 
     if (embeddings.length !== documentsToEmbed.length) {
       throw new Error('Mismatch between the number of embeddings and documents');
@@ -52,18 +50,59 @@ export async function initializeObsidianIndex() {
       embedding: embeddings[index],
       metadata: doc.metadata,
     }));
+    console.log("fishing in the sea")
 
-    const vectorStore = await Chroma.fromDocuments(documents, embedder, {
-      collectionName: 'obsidian_docs',
-    });
+    return documents
+    // const pinecone = new Pinecone({apiKey: process.env.NEXT_PUBLIC_PINECONE_API_KEY!});
+    // const pineconeIndex = pinecone.Index(process.env.NEXT_PUBLIC_PINECONE_INDEX!);
+    // console.log("fishing in the sea2")
+    // const vectorStore = await PineconeStore.fromDocuments(documents, new OpenAIEmbeddings({ openAIApiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
+    // }), {
+    //   pineconeIndex,
+    //   maxConcurrency: 5, // Maximum number of batch requests to allow at once. Each batch is 1000 vectors.
+    // });
 
-    const [aiState, setAIState] = useAIState();
-    setAIState({ ...aiState, obsidianVectorStore: vectorStore });
+    // console.log("feel the rain")
+    // const vectorStore = await Chroma.fromDocuments(documents, embedder, {
+    //   collectionName: "state_of_the_union",
+    //   url: "http://localhost:8000",
+    // });
+    console.log("successfully got chroma working1")
 
     console.log('Obsidian index initialized successfully.');
+
+    return vectorStore
+
   } catch (error) {
     console.error('Error initializing Obsidian index:', error);
     // Handle the error appropriately (e.g., show an error message to the user)
+    return
+  }
+}
+
+export async function testChromaInitialization() {
+  try {
+    const embedder = new OpenAIEmbeddings({
+      openAIApiKey: process.env.OPENAI_API_KEY,
+    });
+
+    const documents = [
+      { pageContent: 'Test document 1', metadata: { source: 'test' } },
+      { pageContent: 'Test document 2', metadata: { source: 'test' } },
+    ];
+
+    const vectorStore = await Chroma.fromDocuments(documents, embedder, {
+      collectionName: "test_collection",
+      url: "http://localhost:8000",
+    });
+    console.log('Vector Store:', vectorStore);
+
+    console.log('Chroma initialization test successful');
+    return vectorStore.toJSON();
+
+  } catch (error) {
+    console.error('Error in Chroma initialization test:', error);
+    return null;
   }
 }
 // export async function getChats(userId?: string | null) {

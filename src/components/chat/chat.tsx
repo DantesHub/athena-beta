@@ -1,23 +1,24 @@
 'use client'
 // import { useLocalStorage } from '@/lib/hooks/use-local-storage'
 import * as React from 'react'
-import { initializeObsidianIndex } from '@/app/actions'
+import { initializeObsidianIndex, testChromaInitialization } from '@/app/actions'
 import { useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { Session } from '@/lib/types'
-import { Message } from '@/lib/chat/actions'
+import { AIState, Message } from '@/lib/chat/actions'
 import { ChatList } from '@/components/chat/chat-list'
 import { cn } from '@/lib/utils'
-import { useUIState } from 'ai/rsc'
+import { useUIState, useAIState } from 'ai/rsc'
 import { EmptyScreen } from '@/components/empty-screen'
 import { ChatScrollAnchor } from '@/components/chat/chat-scroll-anchor'
 import { ChatPanel } from './chat-panel'
 import { cache } from 'react'
+import { Chroma } from 'langchain/vectorstores/chroma'
+import { OpenAIEmbeddings } from "@langchain/openai";
+import { ObsidianLoader } from "langchain/document_loaders/fs/obsidian"; 
+import { Pinecone } from "@pinecone-database/pinecone";
+import { PineconeStore } from "@langchain/pinecone";
 
-const loadIndex = cache(async () => {
-  console.log("brokies")
-  return await initializeObsidianIndex()
-})
 
 export interface ChatProps extends React.ComponentProps<'div'> {
     initialMessages?: Message[]
@@ -25,29 +26,90 @@ export interface ChatProps extends React.ComponentProps<'div'> {
     session?: Session
     missingKeys: string[]
   }
-
-export function Chat({ id, className, session, missingKeys }: ChatProps) {
-    const router = useRouter()
-    const path = usePathname()
-    const [input, setInput] = useState('')
-    const [messages] = useUIState()
-
-    const isLoading = true
-
-
-    React.useEffect(() => {
-      const loadIndexAsync = async () => {
-        console.log("Before loading index")
-        try {
-          await loadIndex();
-          console.log("After loading index")
-        } catch (error) {
-          console.error("Error loading index:", error)
-        }
-      };
-      loadIndexAsync();
-    }, [])
+  // const loadIndex = cache(async () => {
+  //   console.log("brokies")
+  //   return await initializeObsidianIndex()
+  // })
+  export function Chat({ id, className, session, missingKeys }: ChatProps) {
+    const router = useRouter();
+    const path = usePathname();
+    const [input, setInput] = useState('');
+    const [messages, setMessages] = useUIState();
+    const [aiState, setAIState] = useAIState();
+    const isLoading = true;
   
+
+
+ React.useEffect(() => {
+  const fetchExistingVectorStore = async () => {
+    try {
+      console.log("Fetching existing vector store");
+
+      const pinecone = new Pinecone({
+        apiKey: process.env.NEXT_PUBLIC_PINECONE_API_KEY!,
+      });
+      const pineconeIndex = pinecone.Index(
+        process.env.NEXT_PUBLIC_PINECONE_INDEX!
+      );
+
+      const existingVectorStore = await PineconeStore.fromExistingIndex(
+        new OpenAIEmbeddings({
+          openAIApiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
+        }),
+        { pineconeIndex }
+      );
+      const jsonStore = existingVectorStore.toJSON();
+      console.log(existingVectorStore, "Existing vector store");
+
+      console.log("Existing vector store fetched successfully");
+
+      setAIState((prevState: AIState) => ({
+        ...prevState,
+        obsidianVectorStore: jsonStore,
+      }));
+    } catch (error) {
+      console.error("Error in fetching existing vector store:", error);
+
+      // If the existing vector store doesn't exist, initialize it
+      try {
+        console.log("Initializing vector store");
+        const documents = await initializeObsidianIndex();
+
+        const pinecone = new Pinecone({
+          apiKey: process.env.NEXT_PUBLIC_PINECONE_API_KEY!,
+        });
+        const pineconeIndex = pinecone.Index(
+          process.env.NEXT_PUBLIC_PINECONE_INDEX!
+        );
+
+        const vectorStore = await PineconeStore.fromDocuments(
+          documents,
+          new OpenAIEmbeddings({
+            openAIApiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
+          }),
+          {
+            pineconeIndex,
+            maxConcurrency: 5,
+          }
+        );
+
+        console.log(vectorStore, "Vector store initialized");
+
+        console.log("Vector store initialization successful");
+
+        setAIState((prevState: AIState) => ({
+          ...prevState,
+          obsidianVectorStore: vectorStore,
+        }));
+      } catch (initError) {
+        console.error("Error in vector store initialization:", initError);
+      }
+    }
+  };
+
+  fetchExistingVectorStore();
+}, []);
+
   
     return (
         <>
@@ -66,3 +128,5 @@ export function Chat({ id, className, session, missingKeys }: ChatProps) {
         </>
       )
 }
+
+

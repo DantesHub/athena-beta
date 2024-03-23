@@ -42,7 +42,6 @@ export function PromptForm({
       ref={formRef}
       onSubmit={async (e: any) => {
         e.preventDefault()
-
         // Blur focus on mobile
         if (window.innerWidth < 600) {
           e.target['message']?.blur()
@@ -51,7 +50,6 @@ export function PromptForm({
         const value = input.trim()
         setInput('')
         if (!value) return
-
         // Optimistically add user message UI
         setMessages(currentMessages => [
           ...currentMessages,
@@ -60,12 +58,20 @@ export function PromptForm({
             display: <UserMessage>{value}</UserMessage>
           }
         ])
-
+        console.log("value before", value)
         // Submit and get response message
-        const responseMessage = await submitUserMessage(value)
-        setMessages(currentMessages => [...currentMessages, responseMessage])
+        // Submit and get response message
+        try {
+          const responseMessage = await submitUserMessage(value)
+          console.log("value after", value)
+          setMessages(currentMessages => [...currentMessages, responseMessage])
+        } catch (error) {
+          console.error("Error submitting user message: ", error)
+        }
+   
       }}
     >
+
       <div className="relative flex max-h-60 w-full grow flex-col overflow-hidden bg-background px-8 sm:rounded-md sm:border sm:px-12">
         <Tooltip>
           <TooltipTrigger asChild>

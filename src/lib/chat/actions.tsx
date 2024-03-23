@@ -36,7 +36,8 @@ import { Chat } from '@/lib/types'
 import { ObsidianLoader } from "langchain/document_loaders/fs/obsidian"; 
 import { Chroma } from "langchain/vectorstores/chroma";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
-
+import { Pinecone } from '@pinecone-database/pinecone' 
+import { PineconeStore } from "@langchain/pinecone";
 export type Message = {
   role: 'user' | 'assistant' | 'system' | 'function' | 'data' | 'tool'
   content: string
@@ -59,7 +60,7 @@ export type AIState = {
 
 async function submitUserMessage(content: string) {
   'use server'
-
+  console.log("geguman34")
   const aiState = getMutableAIState<typeof AI>()
 
   aiState.update({
@@ -78,18 +79,34 @@ async function submitUserMessage(content: string) {
   let textNode: undefined | React.ReactNode
 
   const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY || ''
+    apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY || ''  
+
   })
 
+  const pinecone = new Pinecone({
+    apiKey: process.env.NEXT_PUBLIC_PINECONE_API_KEY!,
+  });
+  const pineconeIndex = pinecone.Index(
+    process.env.NEXT_PUBLIC_PINECONE_INDEX!
+  );
+
+  const obsidianVectorStore = await PineconeStore.fromExistingIndex(
+    new OpenAIEmbeddings({
+      openAIApiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
+    }),
+    { pineconeIndex }
+  );
+
   // Search the Obsidian vector store based on the user's message
-  const obsidianVectorStore = aiState.get().obsidianVectorStore;
   const searchResults = await obsidianVectorStore?.similaritySearch(content, 3);
+  console.log(obsidianVectorStore, "obsidian vector store")
 
   // Combine the search results into a single string
   const contextText = searchResults?.map(result => result.pageContent).join('\n\n');
 
+  console.log(contextText , "context text")
   const ui = render({
-    model: 'gpt-3.5-turbo',
+    model: 'gpt-4',
     provider: openai,
     initial: <SpinnerMessage />,
     messages: [
@@ -99,7 +116,7 @@ async function submitUserMessage(content: string) {
       },
       {
         role: 'user',
-        content: `Here is some additional context from my knowledge base:\n\n${contextText}\n\nPlease use this information to help answer the following question:\n\n${content}`,
+        content: `Here is some additional notes from my own knowledge base, these notes are my own:\n\n${contextText}\n\nPlease use this information to help answer the following question:\n\n${content}`,
       },
       ...aiState.get().messages.map((message: any) => ({
         role: message.role,
