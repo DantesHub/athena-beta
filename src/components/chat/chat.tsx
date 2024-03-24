@@ -5,7 +5,7 @@ import { initializeObsidianIndex, testChromaInitialization } from '@/app/actions
 import { useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { Session } from '@/lib/types'
-import { AIState, Message } from '@/lib/chat/actions'
+import { AIState, Message, AI } from '@/lib/chat/actions'
 import { ChatList } from '@/components/chat/chat-list'
 import { cn } from '@/lib/utils'
 import { useUIState, useAIState } from 'ai/rsc'
@@ -18,7 +18,7 @@ import { OpenAIEmbeddings } from "@langchain/openai";
 import { ObsidianLoader } from "langchain/document_loaders/fs/obsidian"; 
 import { Pinecone } from "@pinecone-database/pinecone";
 import { PineconeStore } from "@langchain/pinecone";
-
+import { useActions } from 'ai/rsc'
 
 export interface ChatProps extends React.ComponentProps<'div'> {
     initialMessages?: Message[]
@@ -38,35 +38,15 @@ export interface ChatProps extends React.ComponentProps<'div'> {
     const [aiState, setAIState] = useAIState();
     const isLoading = true;
   
-
+   const { setupVectorStore } = useActions()
 
  React.useEffect(() => {
   const fetchExistingVectorStore = async () => {
     try {
       console.log("Fetching existing vector store");
-
-      const pinecone = new Pinecone({
-        apiKey: process.env.NEXT_PUBLIC_PINECONE_API_KEY!,
-      });
-      const pineconeIndex = pinecone.Index(
-        process.env.NEXT_PUBLIC_PINECONE_INDEX!
-      );
-
-      const existingVectorStore = await PineconeStore.fromExistingIndex(
-        new OpenAIEmbeddings({
-          openAIApiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
-        }),
-        { pineconeIndex }
-      );
-      const jsonStore = existingVectorStore.toJSON();
-      console.log(existingVectorStore, "Existing vector store");
-
-      console.log("Existing vector store fetched successfully");
-
-      setAIState((prevState: AIState) => ({
-        ...prevState,
-        obsidianVectorStore: jsonStore,
-      }));
+      await setupVectorStore()
+      
+      
     } catch (error) {
       console.error("Error in fetching existing vector store:", error);
 

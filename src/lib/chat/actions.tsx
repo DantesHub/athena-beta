@@ -36,8 +36,11 @@ import { Chat } from '@/lib/types'
 import { ObsidianLoader } from "langchain/document_loaders/fs/obsidian"; 
 import { Chroma } from "langchain/vectorstores/chroma";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
-import { Pinecone } from '@pinecone-database/pinecone' 
+import { Pinecone } from "@pinecone-database/pinecone";
 import { PineconeStore } from "@langchain/pinecone";
+
+let cachedVectorStore: PineconeStore | null = null;
+
 export type Message = {
   role: 'user' | 'assistant' | 'system' | 'function' | 'data' | 'tool'
   content: string
@@ -53,15 +56,90 @@ export type UIState = {
 export type AIState = {
   chatId: string
   messages: Message[],
-  obsidianVectorStore: Chroma | null
+  obsidianVectorStore: PineconeStore | null
 }
 
 
+async function setupVectorStore() {
+  'use server'
+  const pinecone = new Pinecone({
+    apiKey: process.env.NEXT_PUBLIC_PINECONE_API_KEY!,
+  });
+  const pineconeIndex = pinecone.Index(
+    process.env.NEXT_PUBLIC_PINECONE_INDEX!
+  );
+
+  const existingVectorStore = await PineconeStore.fromExistingIndex(
+    new OpenAIEmbeddings({
+      openAIApiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
+    }),
+    { pineconeIndex }
+  );
+
+  console.log(existingVectorStore, "Existing vector store");
+  
+  console.log("Existing vector store fetched successfully");
+  const aiState = getMutableAIState<typeof AI>()
+  
+
+    // const updatedState = {
+    //   ...aiState.get(),
+    //   messages: [
+    //     ...aiState.get().messages,
+    //     {
+    //       id: nanoid(),
+    //       role: 'user',
+    //       content: ""
+    //     }
+    //   ],
+    //   obsidianVectorStore: existingVectorStore,
+    // }
+
+    aiState.done({
+      ...aiState.get(),
+      messages: [
+        ...aiState.get().messages,
+        {
+          id: nanoid(),
+          role: 'assistant',
+          content: ""
+        }
+      ],
+      obsidianVectorStore: existingVectorStore
+    })
+
+    cachedVectorStore = existingVectorStore
+  console.log("AI state after update:", aiState.get());
+  console.log("Existing vector store set successfully");
+
+}
 
 async function submitUserMessage(content: string) {
   'use server'
   console.log("geguman34")
   const aiState = getMutableAIState<typeof AI>()
+
+
+
+  let textStream: undefined | ReturnType<typeof createStreamableValue<string>>
+  let textNode: undefined | React.ReactNode
+
+  const openai = new OpenAI({
+    apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY || ''  
+  })
+  
+  
+  // Search the Obsidian vector store based on the user's message
+  const obsidianVectorStore = aiState.get().obsidianVectorStore;
+  console.log(cachedVectorStore, "obsidian vector store")
+
+  var searchResults
+  if(cachedVectorStore) {
+     searchResults = await cachedVectorStore?.similaritySearch(content, 3);
+  } 
+
+  // Combine the search results into a single string
+  const contextText = searchResults?.map(result => result.pageContent).join('\n\n');
 
   aiState.update({
     ...aiState.get(),
@@ -72,41 +150,11 @@ async function submitUserMessage(content: string) {
         role: 'user',
         content
       }
-    ]
+    ],
+    obsidianVectorStore: obsidianVectorStore,
   })
-
-  let textStream: undefined | ReturnType<typeof createStreamableValue<string>>
-  let textNode: undefined | React.ReactNode
-
-  const openai = new OpenAI({
-    apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY || ''  
-
-  })
-
-  const pinecone = new Pinecone({
-    apiKey: process.env.NEXT_PUBLIC_PINECONE_API_KEY!,
-  });
-  const pineconeIndex = pinecone.Index(
-    process.env.NEXT_PUBLIC_PINECONE_INDEX!
-  );
-
-  const obsidianVectorStore = await PineconeStore.fromExistingIndex(
-    new OpenAIEmbeddings({
-      openAIApiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
-    }),
-    { pineconeIndex }
-  );
-
-  // Search the Obsidian vector store based on the user's message
-  const searchResults = await obsidianVectorStore?.similaritySearch(content, 3);
-  console.log(obsidianVectorStore, "obsidian vector store")
-
-  // Combine the search results into a single string
-  const contextText = searchResults?.map(result => result.pageContent).join('\n\n');
-
-  console.log(contextText , "context text")
   const ui = render({
-    model: 'gpt-4',
+    model: 'gpt-3.5-turbo',
     provider: openai,
     initial: <SpinnerMessage />,
     messages: [
@@ -116,7 +164,7 @@ async function submitUserMessage(content: string) {
       },
       {
         role: 'user',
-        content: `Here is some additional notes from my own knowledge base, these notes are my own:\n\n${contextText}\n\nPlease use this information to help answer the following question:\n\n${content}`,
+        content: `Here is some additional context from my knowledge base:\n\n${contextText}\n\nPlease use this information to help answer the following question:\n\n${content}`,
       },
       ...aiState.get().messages.map((message: any) => ({
         role: message.role,
@@ -161,6 +209,7 @@ async function submitUserMessage(content: string) {
 export const AI = createAI<AIState, UIState>({
   actions: {
     submitUserMessage,
+    setupVectorStore
   },
   initialUIState: [],
   initialAIState: { chatId: nanoid(), messages: [], obsidianVectorStore: null },

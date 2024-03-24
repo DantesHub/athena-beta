@@ -4,14 +4,48 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 // import { kv } from '@vercel/kv'
 // import { auth } from '@/auth'
-import { useAIState, useUIState} from 'ai/rsc'
+import { useAIState, useUIState, getMutableAIState } from 'ai/rsc'
 import { ObsidianLoader } from "langchain/document_loaders/fs/obsidian"; 
 import { Chroma } from "@langchain/community/vectorstores/chroma";
 import { OpenAIEmbeddings } from "@langchain/openai";
 import { Pinecone } from '@pinecone-database/pinecone';
 import { type Chat } from '@/lib/types'
 import { PineconeStore } from "@langchain/pinecone";
+import { nanoid } from 'ai'
+import { AI } from '@/lib/chat/actions'
 
+ async function setupVectorStore() {
+  const pinecone = new Pinecone({
+    apiKey: process.env.NEXT_PUBLIC_PINECONE_API_KEY!,
+  });
+  const pineconeIndex = pinecone.Index(
+    process.env.NEXT_PUBLIC_PINECONE_INDEX!
+  );
+
+  const existingVectorStore = await PineconeStore.fromExistingIndex(
+    new OpenAIEmbeddings({
+      openAIApiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
+    }),
+    { pineconeIndex }
+  );
+  console.log(existingVectorStore, "Existing vector store");
+
+  console.log("Existing vector store fetched successfully");
+  const aiState = getMutableAIState<typeof AI>()
+
+  aiState.update({
+    ...aiState.get(),
+    messages: [
+      ...aiState.get().messages,
+      {
+        id: nanoid(),
+        role: 'user',
+        content: ""
+      }
+    ],
+    obsidianVectorStore: existingVectorStore,
+  })
+}
 
 export async function initializeObsidianIndex() {
   try {
