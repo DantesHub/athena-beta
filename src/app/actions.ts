@@ -87,26 +87,6 @@ export async function initializeObsidianIndex() {
     console.log("fishing in the sea")
 
     return documents
-    // const pinecone = new Pinecone({apiKey: process.env.NEXT_PUBLIC_PINECONE_API_KEY!});
-    // const pineconeIndex = pinecone.Index(process.env.NEXT_PUBLIC_PINECONE_INDEX!);
-    // console.log("fishing in the sea2")
-    // const vectorStore = await PineconeStore.fromDocuments(documents, new OpenAIEmbeddings({ openAIApiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
-    // }), {
-    //   pineconeIndex,
-    //   maxConcurrency: 5, // Maximum number of batch requests to allow at once. Each batch is 1000 vectors.
-    // });
-
-    // console.log("feel the rain")
-    // const vectorStore = await Chroma.fromDocuments(documents, embedder, {
-    //   collectionName: "state_of_the_union",
-    //   url: "http://localhost:8000",
-    // });
-    console.log("successfully got chroma working1")
-
-    console.log('Obsidian index initialized successfully.');
-
-    return vectorStore
-
   } catch (error) {
     console.error('Error initializing Obsidian index:', error);
     // Handle the error appropriately (e.g., show an error message to the user)

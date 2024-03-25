@@ -44,46 +44,9 @@ export interface ChatProps extends React.ComponentProps<'div'> {
   const fetchExistingVectorStore = async () => {
     try {
       console.log("Fetching existing vector store");
-      await setupVectorStore()
-      
-      
+      await setupVectorStore()            
     } catch (error) {
       console.error("Error in fetching existing vector store:", error);
-
-      // If the existing vector store doesn't exist, initialize it
-      try {
-        console.log("Initializing vector store");
-        const documents = await initializeObsidianIndex();
-
-        const pinecone = new Pinecone({
-          apiKey: process.env.NEXT_PUBLIC_PINECONE_API_KEY!,
-        });
-        const pineconeIndex = pinecone.Index(
-          process.env.NEXT_PUBLIC_PINECONE_INDEX!
-        );
-
-        const vectorStore = await PineconeStore.fromDocuments(
-          documents,
-          new OpenAIEmbeddings({
-            openAIApiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
-          }),
-          {
-            pineconeIndex,
-            maxConcurrency: 5,
-          }
-        );
-
-        console.log(vectorStore, "Vector store initialized");
-
-        console.log("Vector store initialization successful");
-
-        setAIState((prevState: AIState) => ({
-          ...prevState,
-          obsidianVectorStore: vectorStore,
-        }));
-      } catch (initError) {
-        console.error("Error in vector store initialization:", initError);
-      }
     }
   };
 

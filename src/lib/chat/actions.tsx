@@ -9,6 +9,7 @@ import {
   createStreamableValue,
   useAIState
 } from 'ai/rsc'
+import { InMemoryFileStore } from "langchain/stores/file/in_memory";
 
 import {
   BotCard,
@@ -24,7 +25,7 @@ import {
 } from '@/components/genUI/spinner'
 
 import { SpinnerMessage, UserMessage } from '@/components/genUI/message'
-
+import { StoredMessage, mapStoredMessagesToChatMessages } from "@langchain/core/messages";
 import OpenAI from 'openai'
 import {
   formatNumber,
@@ -36,11 +37,16 @@ import { Chat } from '@/lib/types'
 import { ObsidianLoader } from "langchain/document_loaders/fs/obsidian"; 
 import { Chroma } from "langchain/vectorstores/chroma";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
+import { ChatOpenAI } from '@langchain/openai';
 import { Pinecone } from "@pinecone-database/pinecone";
 import { PineconeStore } from "@langchain/pinecone";
-
+import { AutoGPT } from "langchain/experimental/autogpt";
+import { initializeObsidianIndex } from "@/app/actions";
 let cachedVectorStore: PineconeStore | null = null;
-
+let myGPT: AutoGPT | null = null;
+import { SerpAPI } from "@langchain/community/tools/serpapi";
+import { ReadFileTool, WriteFileTool } from "langchain/tools";
+import {MemoryVectorStore} from "langchain/vectorstores/memory";
 export type Message = {
   role: 'user' | 'assistant' | 'system' | 'function' | 'data' | 'tool'
   content: string
@@ -62,61 +68,197 @@ export type AIState = {
 
 async function setupVectorStore() {
   'use server'
-  const pinecone = new Pinecone({
-    apiKey: process.env.NEXT_PUBLIC_PINECONE_API_KEY!,
+  if (cachedVectorStore) return
+  try {
+    const pinecone = new Pinecone({
+      apiKey: process.env.NEXT_PUBLIC_PINECONE_API_KEY!,
+    });
+    const pineconeIndex = pinecone.Index(
+      process.env.NEXT_PUBLIC_PINECONE_INDEX!
+    );
+    const existingVectorStore = await PineconeStore.fromExistingIndex(
+      new OpenAIEmbeddings({
+        openAIApiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
+      }),
+      { pineconeIndex }
+    );
+    cachedVectorStore = existingVectorStore
+    console.log("Existing vector store set successfully");
+  } catch (error) {
+    console.log("Initializing vector store");
+    const documents = await initializeObsidianIndex() || [];
+
+    const pinecone = new Pinecone({
+      apiKey: process.env.NEXT_PUBLIC_PINECONE_API_KEY!,
+    });
+    const pineconeIndex = pinecone.Index(
+      process.env.NEXT_PUBLIC_PINECONE_INDEX!
+    );
+
+    const vectorStore = await PineconeStore.fromDocuments(
+      documents,
+      new OpenAIEmbeddings({
+        openAIApiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
+      }),
+      {
+        pineconeIndex,
+        maxConcurrency: 5,
+      }
+    );
+    console.log(vectorStore, "Vector store initialized");
+  }
+}
+
+
+async function initializeAutoGPT() {
+  'use server'
+  const openai = new OpenAI({
+    apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY || ''  
   });
-  const pineconeIndex = pinecone.Index(
-    process.env.NEXT_PUBLIC_PINECONE_INDEX!
-  );
+  const store = new InMemoryFileStore();
+  if (!cachedVectorStore) {
+    console.log("No cached vector store found, initializing...");
+    await setupVectorStore();
+  }
 
-  const existingVectorStore = await PineconeStore.fromExistingIndex(
-    new OpenAIEmbeddings({
-      openAIApiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
+  const tools = [
+    new ReadFileTool({ store }),
+    new WriteFileTool({ store }),
+    new SerpAPI(process.env.NEXT_PUBLIC_SERPAPI_API_KEY!, {
+      location: "San Francisco,California,United States",
+      hl: "en",
+      gl: "us",
     }),
-    { pineconeIndex }
+  ];
+  const embeds = new OpenAIEmbeddings({ openAIApiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY });
+  const getDefaultRetriever = () => {
+    const defaultVectorStore = new MemoryVectorStore(embeds);
+    return defaultVectorStore.asRetriever();
+  };
+  myGPT = AutoGPT.fromLLMAndTools(
+    new ChatOpenAI({ temperature: 0, openAIApiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY }),
+    tools,    
+    {
+      memory: cachedVectorStore ? cachedVectorStore.asRetriever() : getDefaultRetriever(),
+       aiName: "Athena",
+      aiRole: "Assistant",
+      humanInTheLoop: true,
+      maxIterations: 3
+    }
   );
+}
 
-  console.log(existingVectorStore, "Existing vector store");
+// TODO: -update vectorstore method
+async function runAutoGPT(content: string) {
+  'use server'
+  let textStream: undefined | ReturnType<typeof createStreamableValue<string>>;
+  let textNode: undefined | React.ReactNode;
+  const aiState = getMutableAIState<typeof AI>();
+
+  if (!myGPT) {
+    await initializeAutoGPT();
+  }
+
+  const openai = new OpenAI({
+    apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY || ''  
+  })
+  const store = new InMemoryFileStore();
+  if (!cachedVectorStore) {
+    console.log("No cached vector store found, initializing...");
+    await setupVectorStore();
+  }
+
+  var searchResults
+  if(cachedVectorStore) {
+     searchResults = await cachedVectorStore?.similaritySearch(content, 3);
+  } 
+
+  // Combine the search results into a single string
+  const contextText = searchResults?.map(result => result.pageContent).join('\n\n');
+ 
+  const updatedMessageHistory = aiState.get().messages.map((message: any) => {
+    const baseMessage: StoredMessage = {
+      type: 'message', // You may need to adjust this based on your application's needs
+      data: {
+        content: message.content,
+        name: message.name,
+        role: message.role, // Assuming 'role' exists in your 'message' object
+        tool_call_id: undefined, // Assuming 'tool_call_id' is not available in your 'message' object
+        additional_kwargs: {},
+        response_metadata: {},
+      },
+    };
+    return baseMessage;
+  });
+
+  const finalMessages = mapStoredMessagesToChatMessages(updatedMessageHistory);
+  myGPT!.fullMessageHistory = finalMessages;
+
   
-  console.log("Existing vector store fetched successfully");
-  const aiState = getMutableAIState<typeof AI>()
-  
+    const result = await myGPT!.run([content]);
+  console.log(result, "result")
 
-    // const updatedState = {
-    //   ...aiState.get(),
-    //   messages: [
-    //     ...aiState.get().messages,
-    //     {
-    //       id: nanoid(),
-    //       role: 'user',
-    //       content: ""
-    //     }
-    //   ],
-    //   obsidianVectorStore: existingVectorStore,
-    // }
-
-    aiState.done({
-      ...aiState.get(),
+    const ui = render({
+      model: 'gpt-4',
+      provider: openai,
+      initial: <SpinnerMessage />,
       messages: [
-        ...aiState.get().messages,
         {
-          id: nanoid(),
-          role: 'assistant',
-          content: ""
+          role: 'system',
+          content: `...`,
+        },
+        {
+          role: 'user',
+          content: `Here is some additional context from my knowledge base:\n\n${contextText}\n\nPlease use this information to help answer the following question:\n\n${content}`,
+        },
+        ...aiState.get().messages.map((message: any) => ({
+          role: message.role,
+          content: message.content,
+          name: message.name
+        })),
+
+      ],    
+      text: ({ content, done, delta }) => {
+        if (!textStream) {
+          textStream = createStreamableValue('')
+          textNode = <BotMessage content={result || ""} />
         }
-      ],
-      obsidianVectorStore: existingVectorStore
+
+        if (done) {
+          textStream.done()
+          aiState.done({
+            ...aiState.get(),
+            messages: [
+              ...aiState.get().messages,
+              {
+                id: nanoid(),
+                role: 'assistant',
+                content
+              }
+            ]
+          })
+        } else {
+          textStream.update(delta)
+        }
+
+        return textNode
+      },
     })
 
-    cachedVectorStore = existingVectorStore
-  console.log("AI state after update:", aiState.get());
-  console.log("Existing vector store set successfully");
+    // Update the UI with the latest result
+    textNode = ui;
+  
 
+  return {
+    id: nanoid(),
+    display: textNode
+  }
 }
+
 
 async function submitUserMessage(content: string) {
   'use server'
-  console.log("geguman34")
+
   const aiState = getMutableAIState<typeof AI>()
 
 
@@ -128,10 +270,13 @@ async function submitUserMessage(content: string) {
     apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY || ''  
   })
   
-  
+
   // Search the Obsidian vector store based on the user's message
   const obsidianVectorStore = aiState.get().obsidianVectorStore;
-  console.log(cachedVectorStore, "obsidian vector store")
+  if (!cachedVectorStore) {
+    console.log("No cached vector store found, initializing...");
+    await setupVectorStore();
+  }
 
   var searchResults
   if(cachedVectorStore) {
@@ -141,20 +286,12 @@ async function submitUserMessage(content: string) {
   // Combine the search results into a single string
   const contextText = searchResults?.map(result => result.pageContent).join('\n\n');
 
-  aiState.update({
-    ...aiState.get(),
-    messages: [
-      ...aiState.get().messages,
-      {
-        id: nanoid(),
-        role: 'user',
-        content
-      }
-    ],
-    obsidianVectorStore: obsidianVectorStore,
-  })
+
+
+
+
   const ui = render({
-    model: 'gpt-3.5-turbo',
+    model: 'gpt-4',
     provider: openai,
     initial: <SpinnerMessage />,
     messages: [
@@ -171,7 +308,7 @@ async function submitUserMessage(content: string) {
         content: message.content,
         name: message.name
       }))
-    ],
+    ],    
     text: ({ content, done, delta }) => {
       if (!textStream) {
         textStream = createStreamableValue('')
@@ -209,7 +346,8 @@ async function submitUserMessage(content: string) {
 export const AI = createAI<AIState, UIState>({
   actions: {
     submitUserMessage,
-    setupVectorStore
+    setupVectorStore,
+    runAutoGPT
   },
   initialUIState: [],
   initialAIState: { chatId: nanoid(), messages: [], obsidianVectorStore: null },
@@ -223,6 +361,7 @@ export const AI = createAI<AIState, UIState>({
       return uiState
     }
   },
+  
   unstable_onSetAIState: async ({ state, done }) => {
     'use server'
 
@@ -271,5 +410,7 @@ export const getUIStateFromAIState = (aiState: Chat) => {
 
 
 // Call the initializeObsidianIndex function separately
+
+
 
 

@@ -28,7 +28,7 @@ export function PromptForm({
   const router = useRouter()
   const { formRef, onKeyDown } = useEnterSubmit()
   const inputRef = React.useRef<HTMLTextAreaElement>(null)
-  const { submitUserMessage } = useActions()
+  const { submitUserMessage, runAutoGPT } = useActions()
   const [_, setMessages] = useUIState<typeof AI>()
 
   React.useEffect(() => {
@@ -62,7 +62,7 @@ export function PromptForm({
         // Submit and get response message
         // Submit and get response message
         try {
-          const responseMessage = await submitUserMessage(value)
+          const responseMessage = await runAutoGPT(value)
           console.log("value after", value)
           setMessages(currentMessages => [...currentMessages, responseMessage])
         } catch (error) {
