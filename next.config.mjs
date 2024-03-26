@@ -5,7 +5,7 @@ const nextConfig = {
   webpack: (config, { isServer }) => {
     // Only run the package exclusion on the server
     if (isServer) {
-      config.externals = ['onnxruntime-node', 'sharp', ...config.externals];  
+      config.externals = ['onnxruntime-node', 'sharp', 'fsevents', ...config.externals];  
     }
 
     return config;

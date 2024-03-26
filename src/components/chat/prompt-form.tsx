@@ -62,7 +62,7 @@ export function PromptForm({
         // Submit and get response message
         // Submit and get response message
         try {
-          const responseMessage = await runAutoGPT(value)
+          const responseMessage = await submitUserMessage(value)
           console.log("value after", value)
           setMessages(currentMessages => [...currentMessages, responseMessage])
         } catch (error) {

@@ -44,15 +44,20 @@ import { AutoGPT } from "langchain/experimental/autogpt";
 import { initializeObsidianIndex } from "@/app/actions";
 let cachedVectorStore: PineconeStore | null = null;
 let myGPT: AutoGPT | null = null;
+let mddbClient: MarkdownDB | null = null;
 import { SerpAPI } from "@langchain/community/tools/serpapi";
 import { ReadFileTool, WriteFileTool } from "langchain/tools";
 import {MemoryVectorStore} from "langchain/vectorstores/memory";
+
+
+
 export type Message = {
   role: 'user' | 'assistant' | 'system' | 'function' | 'data' | 'tool'
   content: string
   id: string
   name?: string
 }
+import {MarkdownDB} from "mddb";
 
 export type UIState = {
   id: string
@@ -64,6 +69,7 @@ export type AIState = {
   messages: Message[],
   obsidianVectorStore: PineconeStore | null
 }
+
 
 
 async function setupVectorStore() {
@@ -109,6 +115,38 @@ async function setupVectorStore() {
   }
 }
 
+async function initializeMDDB() {
+  try {
+    const client = new MarkdownDB({
+      client: "sqlite3",
+      connection: {
+        filename: "/Users/dantekim/Documents/Projects/athena-beta/src/markdownFiles/markdown.db",
+      },
+    });
+    console.log("Initializing MarkdownDB");
+    const clientPromise = client.init();
+    mddbClient = await clientPromise;
+  } catch (error) {
+    console.error("Error initializing MarkdownDB:", error);
+    throw error;
+  }
+}
+
+async function queryMDDB(query: String) {
+  if (!mddbClient) {
+     await initializeMDDB();
+  }
+
+  try {
+    const result = await mddbClient?.getFiles();
+    console.log("result", result)
+    return result;
+  } catch (error) {
+    console.error("Error executing query:", error);
+    throw error;
+  }
+
+}
 
 async function initializeAutoGPT() {
   'use server'
@@ -148,6 +186,11 @@ async function initializeAutoGPT() {
   );
 }
 
+
+ async function startMorningRoutine() {
+  'use server'
+   await queryMDDB("SELECT Author FROM sqlite_master WHERE type='table';");
+}
 // TODO: -update vectorstore method
 async function runAutoGPT(content: string) {
   'use server'
@@ -162,6 +205,7 @@ async function runAutoGPT(content: string) {
   const openai = new OpenAI({
     apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY || ''  
   })
+
   const store = new InMemoryFileStore();
   if (!cachedVectorStore) {
     console.log("No cached vector store found, initializing...");
@@ -244,10 +288,8 @@ async function runAutoGPT(content: string) {
         return textNode
       },
     })
-
     // Update the UI with the latest result
     textNode = ui;
-  
 
   return {
     id: nanoid(),
@@ -260,8 +302,6 @@ async function submitUserMessage(content: string) {
   'use server'
 
   const aiState = getMutableAIState<typeof AI>()
-
-
 
   let textStream: undefined | ReturnType<typeof createStreamableValue<string>>
   let textNode: undefined | React.ReactNode
@@ -282,13 +322,8 @@ async function submitUserMessage(content: string) {
   if(cachedVectorStore) {
      searchResults = await cachedVectorStore?.similaritySearch(content, 3);
   } 
-
   // Combine the search results into a single string
   const contextText = searchResults?.map(result => result.pageContent).join('\n\n');
-
-
-
-
 
   const ui = render({
     model: 'gpt-4',
@@ -347,7 +382,8 @@ export const AI = createAI<AIState, UIState>({
   actions: {
     submitUserMessage,
     setupVectorStore,
-    runAutoGPT
+    runAutoGPT,
+    startMorningRoutine
   },
   initialUIState: [],
   initialAIState: { chatId: nanoid(), messages: [], obsidianVectorStore: null },

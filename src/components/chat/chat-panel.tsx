@@ -9,8 +9,7 @@ import { FooterText } from '@/components/footer'
 import { useAIState, useActions, useUIState } from 'ai/rsc'
 import type { AI } from '@/lib/chat/actions'
 import { nanoid } from 'nanoid'
-// import { UserMessage } from './stocks/message'
-
+import {UserMessage} from '@/components/genUI/message'
 
 export interface ChatPanelProps {
   id?: string
@@ -22,24 +21,30 @@ export interface ChatPanelProps {
 export function ChatPanel({ id, title, input, setInput }: ChatPanelProps) {
   const [aiState, setAIState] = useAIState()
   const [messages, setMessages] = useUIState<typeof AI>()
-  const { submitUserMessage } = useActions()
+  const { submitUserMessag, startMorningRoutine } = useActions()
   const [shareDialogOpen, setShareDialogOpen] = React.useState(false)
 
   const exampleMessages = [
+    // TODO: - at the top we have your character.
+    // check box for habits => hours focused, morning routine checked. To-dos completed. Words written. 
+    // can be replaced with Wind Down Routine
     {
-      heading: 'What are the',
-      subheading: 'trending memecoins today?',
-      message: `What are the trending memecoins today?`
+      heading: 'Morning Routine',
+      subheading: 'Set the day up for success',
+      message: `Hi, let's get this party started`
     },
     {
-      heading: 'What is the price of',
+      heading: 'Start Focus Session',
       subheading: 'DOGE in the stock market?',
       message: 'What is the price of DOGE in the stock market?'
     },
     {
-      heading: 'I would like to buy',
-      subheading: '42 DOGE coins',
-      message: `I would like to buy 42 DOGE coins`
+      heading: 'Journal Observations',
+      subheading: 'Brain dump / clear your head',
+      message: `I'm gonna start a journaling session`
+      // Two options
+      // at the end: do you want my thoughts on this?
+      // do you want me to extract insights to save for later? 
     },
     {
       heading: 'What are some',
@@ -53,7 +58,44 @@ export function ChatPanel({ id, title, input, setInput }: ChatPanelProps) {
       {/* <ButtonScrollToBottom /> */}
 
       <div className="mx-auto sm:max-w-2xl sm:px-4">
-        <div className="mb-4 grid grid-cols-2 gap-2 px-4 sm:px-0">    
+      <div className="mb-4 grid grid-cols-2 gap-2 px-4 sm:px-0">
+          {messages.length === 0 &&
+            exampleMessages.map((example, index) => (
+              <div
+                key={example.heading}
+                className={`cursor-pointer rounded-lg border bg-white p-4 hover:bg-zinc-50 dark:bg-zinc-950 dark:hover:bg-zinc-900 ${
+                  index > 1 && 'hidden md:block'
+                }`}
+                onClick={async () => {
+                  setMessages(currentMessages => [
+                    ...currentMessages,
+                    {
+                      id: nanoid(),
+                      display: <UserMessage>{example.message}</UserMessage>
+                    }
+                  ])
+                  if (example.heading == "What are some") {
+                    await startMorningRoutine();
+                    console.log("morning routine started")
+                  } else {
+                    const responseMessage = await submitUserMessage(
+                      example.message
+                    )
+  
+                    setMessages(currentMessages => [
+                      ...currentMessages,
+                      responseMessage
+                    ])
+                  }
+              
+                }}
+              >
+                <div className="text-sm font-semibold">{example.heading}</div>
+                <div className="text-sm text-zinc-600">
+                  {example.subheading}
+                </div>
+              </div>
+            ))}
         </div>
 
         {messages?.length >= 2 ? (
