@@ -19,20 +19,14 @@ import {
 import {
   Events
 } from '@/components/genUI/events'
-
+import { nanoid } from 'ai';
 import {
   spinner
 } from '@/components/genUI/spinner'
-
-import { SpinnerMessage, UserMessage } from '@/components/genUI/message'
+import { z } from "zod"
+import { SpinnerMessage, UserMessage, SystemMessage } from '@/components/genUI/message'
 import { StoredMessage, mapStoredMessagesToChatMessages } from "@langchain/core/messages";
 import OpenAI from 'openai'
-import {
-  formatNumber,
-  runAsyncFnWithoutBlocking,
-  sleep,
-  nanoid
-} from '@/lib/utils'
 import { Chat } from '@/lib/types'
 import { ObsidianLoader } from "langchain/document_loaders/fs/obsidian"; 
 import { Chroma } from "langchain/vectorstores/chroma";
@@ -48,27 +42,15 @@ let mddbClient: MarkdownDB | null = null;
 import { SerpAPI } from "@langchain/community/tools/serpapi";
 import { ReadFileTool, WriteFileTool } from "langchain/tools";
 import {MemoryVectorStore} from "langchain/vectorstores/memory";
+import {
+  runAsyncFnWithoutBlocking,
+  sleep,
+  formatNumber,
+  runOpenAICompletion,
+} from'@/lib/utils'
 
-
-
-export type Message = {
-  role: 'user' | 'assistant' | 'system' | 'function' | 'data' | 'tool'
-  content: string
-  id: string
-  name?: string
-}
-import {MarkdownDB} from "mddb";
-
-export type UIState = {
-  id: string
-  display: React.ReactNode
-}[]
-
-export type AIState = {
-  chatId: string
-  messages: Message[],
-  obsidianVectorStore: PineconeStore | null
-}
+import  GenTable  from "@/components/genUI/table"
+import  {GenTasks,Task}  from "@/components/genUI/tasks"
 
 
 
@@ -138,18 +120,21 @@ async function queryMDDB(query: String) {
   }
 
   try {
-    const result = await mddbClient?.getFiles();
+    const result = await mddbClient?.db.raw(query)
     console.log("result", result)
     return result;
   } catch (error) {
     console.error("Error executing query:", error);
     throw error;
   }
-
 }
+
+
 
 async function initializeAutoGPT() {
   'use server'
+  const aiState = getMutableAIState<typeof AI>()
+
   const openai = new OpenAI({
     apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY || ''  
   });
@@ -189,7 +174,7 @@ async function initializeAutoGPT() {
 
  async function startMorningRoutine() {
   'use server'
-   await queryMDDB("SELECT Author FROM sqlite_master WHERE type='table';");
+   await queryMDDB("SELECT files.*");
 }
 // TODO: -update vectorstore method
 async function runAutoGPT(content: string) {
@@ -265,7 +250,7 @@ async function runAutoGPT(content: string) {
       text: ({ content, done, delta }) => {
         if (!textStream) {
           textStream = createStreamableValue('')
-          textNode = <BotMessage content={result || ""} />
+          textNode = <BotMessage>{content}</BotMessage>
         }
 
         if (done) {
@@ -297,10 +282,8 @@ async function runAutoGPT(content: string) {
   }
 }
 
-
 async function submitUserMessage(content: string) {
   'use server'
-
   const aiState = getMutableAIState<typeof AI>()
 
   let textStream: undefined | ReturnType<typeof createStreamableValue<string>>
@@ -309,73 +292,233 @@ async function submitUserMessage(content: string) {
   const openai = new OpenAI({
     apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY || ''  
   })
-  
 
-  // Search the Obsidian vector store based on the user's message
-  const obsidianVectorStore = aiState.get().obsidianVectorStore;
-  if (!cachedVectorStore) {
-    console.log("No cached vector store found, initializing...");
-    await setupVectorStore();
-  }
+  const reply = createStreamableUI(
+    <BotMessage className="items-center">{spinner}</BotMessage>
+  );
 
-  var searchResults
-  if(cachedVectorStore) {
-     searchResults = await cachedVectorStore?.similaritySearch(content, 3);
-  } 
-  // Combine the search results into a single string
-  const contextText = searchResults?.map(result => result.pageContent).join('\n\n');
+  aiState.update({
+    ...aiState.get(),
+    messages: [
+      ...aiState.get().messages,
+      {
+        id: nanoid(),
+        role: 'user',
+        content
+      }
+    ]
+  });
 
-  const ui = render({
-    model: 'gpt-4',
-    provider: openai,
-    initial: <SpinnerMessage />,
+    const prompt = `\
+    You are a bot that helps the user make sense of their notes and data. You generate graphs/tables or answers questions from a vector store that has embeddings about the users notes
+    
+    Messages inside [] means that it's a UI element or a user event. For example:
+    - "[Results for query: query with format: format and title: title and description: description. with data" means that a chart/table/number card is shown to that user.
+
+    The user has a markdown folder filled with all of their journals, book, video, podcast, movie, show notes. 
+          
+    You help users query their data.
+
+    There are two databases files, and tasks. 
+
+    Files:
+    url_path == title of the note. 
+
+    There is no table called notes, if user asks for something make sure to query from the files table
+    All notes have a property called metadata that contains properties: 
+    Author, 
+    Created,
+    tags, 
+    Source,
+    related 
+    rating (Decimal between 0-5)  
+
+    Tasks:
+    due,
+    created,
+    start,
+    checked (1 means done),
+    description
+
+    Example querys:
+    give me all books written by dan koe:
+    SELECT * FROM files WHERE metadata LIKE '%dan%koe%' COLLATE NOCASE;
+
+    open note War of Art:
+    SELECT * FROM files WHERE url_path LIKE '%war%of%art%' COLLATE NOCASE;
+    
+    or give me
+    The current time is ${new Date().toISOString()}.
+
+    Feel free to be creative with suggesting queries and follow ups based on what you think. Keep responses short and to the point.
+    `;
+
+
+  const completion = runOpenAICompletion(openai, {
+    model: "gpt-4-0125-preview",
+    stream: true,
     messages: [
       {
-        role: 'system',
-        content: `...`,
+        role: "system",
+        content: prompt,
+      },
+      ...aiState.get().messages.map((info: any) => ({
+        role: info.role,
+        content: info.content,
+        name: info.name,
+      })),
+    ],
+    functions: [
+      {
+        name: "query_data",
+        description: `Gets the results for a query about the data`,
+        parameters: zOpenAIQueryResponse,
       },
       {
-        role: 'user',
-        content: `Here is some additional context from my knowledge base:\n\n${contextText}\n\nPlease use this information to help answer the following question:\n\n${content}`,
+        name: "query_tasks",
+        description: `Gets the results for a query about user tasks`,
+        parameters: zOpenAIQueryResponse,
       },
-      ...aiState.get().messages.map((message: any) => ({
-        role: message.role,
-        content: message.content,
-        name: message.name
-      }))
-    ],    
-    text: ({ content, done, delta }) => {
-      if (!textStream) {
-        textStream = createStreamableValue('')
-        textNode = <BotMessage content={textStream.value} />
-      }
+    ],
+    temperature: 0,
+  });
 
-      if (done) {
-        textStream.done()
-        aiState.done({
-          ...aiState.get(),
-          messages: [
-            ...aiState.get().messages,
-            {
-              id: nanoid(),
-              role: 'assistant',
-              content
-            }
-          ]
-        })
-      } else {
-        textStream.update(delta)
-      }
+  completion.onTextContent(async (content: string, isFinal: boolean) => {   
+    reply.update(
+      <BotMessage>
+        {content}
+      </BotMessage>
+    );
+    if (isFinal) {
+      reply.done();
+      aiState.done({
+        ...aiState.get(),
+        messages: [
+          ...aiState.get().messages,
+          {
+            id: nanoid(),
+            role: 'assistant',
+            content
+          }
+        ]
+      })
+    }
+  });
 
-      return textNode
-    },
-  })
+  // TASKS
+  completion.onFunctionCall(
+    "query_tasks",
+    async (input: OpenAIQueryResponse) => {
+      const { format, title, timeField } = input;
+      let query = input.query;
+      console.log("fetching tasks")
+      // // replace $sent_at with timestamp
+      // query = query.replace("$sent_at", "timestamp");
+
+      // // replace `properties."timestamp"` with `timestamp`
+      // query = query.replace(/properties\."timestamp"/g, "timestamp");
+      const res = await queryMDDB(input.query)
+      const queryRes = res as Task[];
+      
+      // need to search for files and update url
+
+      reply.done(
+        <BotCard>
+            <div className="py-4">
+                <GenTasks tasks = {queryRes}/>
+            </div>
+        </BotCard>
+      );
+      
+      aiState.done({
+        ...aiState.get(),
+        messages: [
+          ...aiState.get().messages,
+          {
+            id: nanoid(),
+            role: "function",
+            name: "query_data",
+            content: `[Results for query: ${query} with format: ${format} and title: ${title}]`,
+          },
+        ]
+      })
+    })
+
+   // NOTES
+  completion.onFunctionCall(
+    "query_data",
+    async (input: OpenAIQueryResponse) => {
+      const { format, title, timeField } = input;
+      let query = input.query;
+      
+      // // replace $sent_at with timestamp
+      // query = query.replace("$sent_at", "timestamp");
+
+      // // replace `properties."timestamp"` with `timestamp`
+      // query = query.replace(/properties\."timestamp"/g, "timestamp");
+      const res = await queryMDDB(input.query)
+      const queryRes = res as QueryResult[];
+
+      reply.done(
+        <BotCard>
+            <div className="py-4">
+                <GenTable files = {queryRes}/>
+            </div>
+        </BotCard>
+      );
+      
+      aiState.done({
+        ...aiState.get(),
+        messages: [
+          ...aiState.get().messages,
+          {
+            id: nanoid(),
+            role: "function",
+            name: "query_data",
+            content: `[Results for query: ${query} with format: ${format} and title: ${title}]`,
+          },
+        ]
+      })
+    })
+
 
   return {
     id: nanoid(),
-    display: ui
+    display: reply.value
   }
 }
+
+type OpenAIQueryResponse = z.infer<typeof zOpenAIQueryResponse>;
+// {
+//   _id: 'ccb966ec4cf7ee4aca60651b8e965e7de310c42a',
+//   file_path: '/Users/dantekim/Documents/Projects/athena-beta/src/markdownFiles/B$ The War Of Art.md',
+//   extension: 'md',
+//   url_path: 'B$%20The%20War%20Of%20Art',
+//   filetype: null,
+//   metadata: '{"Author":"[[Steven Pressfield]]","Created":"2020-08-22T00:00:00.000Z","Published":null,"tags":["🧠/📚","📥/🟩"],"Source":null,"related":null,"rating":3.5,"tasks":[]}',
+//   tasks: '[]'
+// },
+
+export type QueryResult = {
+  _id: string;
+  file_path: string;
+  extension: string;
+  url_path: string;
+  filetype: string | null;
+  metadata: string;
+  tasks: string;
+};
+
+const zOpenAIQueryResponse = z.object({
+  query: z.string().describe(`Creates a SQLite Query for the given query.`),
+  format: z.enum(["table, graph"]).describe("The format of the result"),
+  title: z.string().optional().describe("The title of the chart"),
+  timeField: z
+    .string()
+    .optional()
+    .describe("If timeseries data, the column to use as the time field"),
+});
+
 
 
 export const AI = createAI<AIState, UIState>({
@@ -419,8 +562,25 @@ export const AI = createAI<AIState, UIState>({
   }
 })
 
+export type Message = {
+  role: 'user' | 'assistant' | 'system' | 'function' | 'data' | 'tool'
+  content: string
+  id: string
+  name?: string
+}
 
+import { MarkdownDB } from "mddb";
 
+export type UIState = {
+  id: string
+  display: React.ReactNode
+}[]
+
+export type AIState = {
+  chatId: string
+  messages: Message[],
+  obsidianVectorStore: PineconeStore | null
+}
 
 export const getUIStateFromAIState = (aiState: Chat) => {
   return aiState.messages
@@ -434,7 +594,7 @@ export const getUIStateFromAIState = (aiState: Chat) => {
       ) : message.role === 'user' ? (
         <UserMessage>{message.content}</UserMessage>
       ) : (
-        <BotMessage content={message.content} />
+        <BotMessage>{message.content}</BotMessage>
       )
     }));
 };

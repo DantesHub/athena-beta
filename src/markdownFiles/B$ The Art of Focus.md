@@ -9,7 +9,11 @@ Source:
 related: 
 rating: 4.25
 ---
-
+- [ ] we doing this {dueDateReal: x, priority: {}} [due:: 2024-10-01]
+	- {dueDate: x, priority: {}}
+	- due:: true
+	- completion:: yes
+- [x] this is task2
 - [[Create a detailed plan, create the order, so you do not fall victim to entropy]]
 - [[V$ How To Get Ahead Of 99% Of People (In 6-12 Months)]]
 # Literature Notes

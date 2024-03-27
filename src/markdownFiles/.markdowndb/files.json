@@ -1,0 +1,932 @@
+[
+  {
+    "_id": "3ab66300c86dd1011e2f6002c587399891dbd244",
+    "file_path": "/Users/dantekim/Documents/Projects/athena-beta/src/markdownFiles/B$ The Art of Focus.md",
+    "extension": "md",
+    "url_path": "B$%20The%20Art%20of%20Focus",
+    "filetype": null,
+    "metadata": {
+      "Author": "[[@Dan Koe]]",
+      "Created": "2024-03-04T00:00:00.000Z",
+      "Published": null,
+      "tags": [
+        "🧠/📚",
+        "📥/🟧"
+      ],
+      "Source": null,
+      "related": null,
+      "rating": 4.25,
+      "tasks": [
+        {
+          "description": "we doing this {dueDateReal: x, priority: {}} [due:: 2024-10-01] {dueDate: x, priority: {}} due:: true completion:: yes",
+          "checked": false,
+          "created": null,
+          "due": "2024-10-01",
+          "completion": null,
+          "scheduled": null,
+          "start": null,
+          "metadata": {
+            "due": "2024-10-01",
+            "tags": []
+          }
+        },
+        {
+          "description": "this is task2",
+          "checked": true,
+          "created": null,
+          "due": null,
+          "completion": null,
+          "scheduled": null,
+          "start": null,
+          "metadata": {}
+        }
+      ]
+    },
+    "tags": [
+      "🧠/📚",
+      "📥/🟧"
+    ],
+    "links": [
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "https://read.readwise.io/read/01hqpmx3thwb8yfw0gpqxpnfxf",
+        "toRaw": "https://read.readwise.io/read/01hqpmx3thwb8yfw0gpqxpnfxf",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "https://read.readwise.io/read/01hpwy4ny2b3kmjy21tp76vy15",
+        "toRaw": "https://read.readwise.io/read/01hpwy4ny2b3kmjy21tp76vy15",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "https://read.readwise.io/read/01hq6a23p4je8t3a8gkvs6gtt9",
+        "toRaw": "https://read.readwise.io/read/01hq6a23p4je8t3a8gkvs6gtt9",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "https://read.readwise.io/read/01hq9vazxpng0pkjp9g9h09c40",
+        "toRaw": "https://read.readwise.io/read/01hq9vazxpng0pkjp9g9h09c40",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "https://read.readwise.io/read/01hq9v4rxmgqsbk98ympe1dhxa",
+        "toRaw": "https://read.readwise.io/read/01hq9v4rxmgqsbk98ympe1dhxa",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "https://read.readwise.io/read/01hqjxtzysdzqgkwq05mppmgcj",
+        "toRaw": "https://read.readwise.io/read/01hqjxtzysdzqgkwq05mppmgcj",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "https://read.readwise.io/read/01hqjxxce6tcq1ak3a3knbzd5s",
+        "toRaw": "https://read.readwise.io/read/01hqjxxce6tcq1ak3a3knbzd5s",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "https://read.readwise.io/read/01hqjy0pw5z4n8ngga8y8n7fee",
+        "toRaw": "https://read.readwise.io/read/01hqjy0pw5z4n8ngga8y8n7fee",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "https://read.readwise.io/read/01hqjy5jw1p1y9fsgnhx0zzr4r",
+        "toRaw": "https://read.readwise.io/read/01hqjy5jw1p1y9fsgnhx0zzr4r",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "https://read.readwise.io/read/01hqjy9hx4pqtm4yvcxz50tm5k",
+        "toRaw": "https://read.readwise.io/read/01hqjy9hx4pqtm4yvcxz50tm5k",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "https://read.readwise.io/read/01hqpmgym91mr40303wq08njg7",
+        "toRaw": "https://read.readwise.io/read/01hqpmgym91mr40303wq08njg7",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "https://read.readwise.io/read/01hqpmhz21wmym890sgcdwacyg",
+        "toRaw": "https://read.readwise.io/read/01hqpmhz21wmym890sgcdwacyg",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "https://read.readwise.io/read/01hqpn0ey4h9gkj6tkwt2h1sqk",
+        "toRaw": "https://read.readwise.io/read/01hqpn0ey4h9gkj6tkwt2h1sqk",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "https://read.readwise.io/read/01hqpmmcdxfba61eps88e84dnt",
+        "toRaw": "https://read.readwise.io/read/01hqpmmcdxfba61eps88e84dnt",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "https://read.readwise.io/read/01hqpn79jzys1damk1s14th7d7",
+        "toRaw": "https://read.readwise.io/read/01hqpn79jzys1damk1s14th7d7",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "https://read.readwise.io/read/01hqpn7q8h79bxpctvtezcyhbj",
+        "toRaw": "https://read.readwise.io/read/01hqpn7q8h79bxpctvtezcyhbj",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "https://read.readwise.io/read/01hqpn7gt5zv9ngss4fe69nqeg",
+        "toRaw": "https://read.readwise.io/read/01hqpn7gt5zv9ngss4fe69nqeg",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "https://read.readwise.io/read/01hqpn8rj3aem3w2p6sqf6sesc",
+        "toRaw": "https://read.readwise.io/read/01hqpn8rj3aem3w2p6sqf6sesc",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "https://read.readwise.io/read/01hqpn90pdxpr987jpgvfh9qjb",
+        "toRaw": "https://read.readwise.io/read/01hqpn90pdxpr987jpgvfh9qjb",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "https://read.readwise.io/read/01hqtrvbc8qht137gvnkqe1t89",
+        "toRaw": "https://read.readwise.io/read/01hqtrvbc8qht137gvnkqe1t89",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "https://read.readwise.io/read/01hqts31sx2qt7aeq7vdvm0qsr",
+        "toRaw": "https://read.readwise.io/read/01hqts31sx2qt7aeq7vdvm0qsr",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "https://read.readwise.io/read/01hr365n69v23dwahav236jbeb",
+        "toRaw": "https://read.readwise.io/read/01hr365n69v23dwahav236jbeb",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "https://read.readwise.io/read/01hr366m0v633xfdpwz6zrr5h2",
+        "toRaw": "https://read.readwise.io/read/01hr366m0v633xfdpwz6zrr5h2",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "https://read.readwise.io/read/01hr3674hh68kgm661q54x3vcz",
+        "toRaw": "https://read.readwise.io/read/01hr3674hh68kgm661q54x3vcz",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "https://read.readwise.io/read/01hr36mwms6s4662av6cck9rp4",
+        "toRaw": "https://read.readwise.io/read/01hr36mwms6s4662av6cck9rp4",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "https://read.readwise.io/read/01hr3709zemdr02z27251qgv97",
+        "toRaw": "https://read.readwise.io/read/01hr3709zemdr02z27251qgv97",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "https://read.readwise.io/read/01hr3756grb5jezvxsf2dw5967",
+        "toRaw": "https://read.readwise.io/read/01hr3756grb5jezvxsf2dw5967",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "https://read.readwise.io/read/01hr377q2c9a4wz9ch6ndbje9s",
+        "toRaw": "https://read.readwise.io/read/01hr377q2c9a4wz9ch6ndbje9s",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "https://read.readwise.io/read/01hrz5a623cynxeq6xhy1fpkz7",
+        "toRaw": "https://read.readwise.io/read/01hrz5a623cynxeq6xhy1fpkz7",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "https://read.readwise.io/read/01hrz5jcjq0cfwe5r8c4sddyjy",
+        "toRaw": "https://read.readwise.io/read/01hrz5jcjq0cfwe5r8c4sddyjy",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "https://read.readwise.io/read/01hrz6ezgc7w8z9sce5ze1desm",
+        "toRaw": "https://read.readwise.io/read/01hrz6ezgc7w8z9sce5ze1desm",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "https://read.readwise.io/read/01hrz6g82va52m23vyqn4cpamg",
+        "toRaw": "https://read.readwise.io/read/01hrz6g82va52m23vyqn4cpamg",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "@Dan Koe",
+        "toRaw": "@Dan Koe",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "Create a detailed plan, create the order, so you do not fall victim to entropy",
+        "toRaw": "Create a detailed plan, create the order, so you do not fall victim to entropy",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "V$ How To Get Ahead Of 99% Of People (In 6-12 Months)",
+        "toRaw": "V$ How To Get Ahead Of 99% Of People (In 6-12 Months)",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "L$ The unconscious mind can manage 11 million bits of information per second. This includes our habits, reactions, breathing. The conscious mind can only focus on a limited number things",
+        "toRaw": "L$ The unconscious mind can manage 11 million bits of information per second. This includes our habits, reactions, breathing. The conscious mind can only focus on a limited number things",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "E$ Experimentation leads to true experience. Trial and error will always outperform design. Action bias. Easiest way to figure out if something is viable or not is by doing it. We have an IQ of a 1000 when we do trial and error - Nasim Taleb",
+        "toRaw": "E$ Experimentation leads to true experience. Trial and error will always outperform design. Action bias. Easiest way to figure out if something is viable or not is by doing it. We have an IQ of a 1000 when we do trial and error - Nasim Taleb",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "L$ We often interpret a situation as difficult when it isn't supposed to be any other way.  This gap of expectation and reality is what causes suffering. By expecting the pain, the gap is smaller. Your focus is engaged with the present moment",
+        "toRaw": "L$ We often interpret a situation as difficult when it isn't supposed to be any other way.  This gap of expectation and reality is what causes suffering. By expecting the pain, the gap is smaller. Your focus is engaged with the present moment",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "L$ Observe the patterns that are all around you and how they reflect in ur personal life.This is an impermanent state that will resolve with time and effort.",
+        "toRaw": "L$ Observe the patterns that are all around you and how they reflect in ur personal life.This is an impermanent state that will resolve with time and effort.",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "L$  We resist conflict by narrowing our minds on the conflict instead of just letting it flow as an interesting necessary part of existence. Feelings are feedback and we should treat them as such.",
+        "toRaw": "L$  We resist conflict by narrowing our minds on the conflict instead of just letting it flow as an interesting necessary part of existence. Feelings are feedback and we should treat them as such.",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "L$ Unit of Mind- Anything that can be given attention on any place of existence. All units are connected. A hand has no meaning without arm.These connections can also be horizontal, a cup wouldn't make sense without the hand to hold it",
+        "toRaw": "L$ Unit of Mind- Anything that can be given attention on any place of existence. All units are connected. A hand has no meaning without arm.These connections can also be horizontal, a cup wouldn't make sense without the hand to hold it",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "L$ One notable pattern within the infinite connections of units of mind- division and reunion",
+        "toRaw": "L$ One notable pattern within the infinite connections of units of mind- division and reunion",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "L$ The ideas in your mind divide and reunite we call this creativity. ",
+        "toRaw": "L$ The ideas in your mind divide and reunite we call this creativity. ",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "L$ Expectation vs Intention, people will go insane over the thought of hot weather but will go into a sauna without complaint == a conscious goal with clarity  on how to overcome ur problems.",
+        "toRaw": "L$ Expectation vs Intention, people will go insane over the thought of hot weather but will go into a sauna without complaint == a conscious goal with clarity  on how to overcome ur problems.",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "L$ The nature of experience is refinement through struggle. If you are inexperienced, problems will be as problematic as the attention you give them.",
+        "toRaw": "L$ The nature of experience is refinement through struggle. If you are inexperienced, problems will be as problematic as the attention you give them.",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "Nora App",
+        "toRaw": "Nora App",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "Gamification",
+        "toRaw": "Gamification",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "L$ The tactics, diet, or routine isn't what makes you feel good, it's the clarity, don't fall in love with this",
+        "toRaw": "L$ The tactics, diet, or routine isn't what makes you feel good, it's the clarity, don't fall in love with this",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "L$ You cannot solve a problem with the same level of mind that created it, you have to reframe - zoom out, which involves changing your perception which is a unit of mind",
+        "toRaw": "L$ You cannot solve a problem with the same level of mind that created it, you have to reframe - zoom out, which involves changing your perception which is a unit of mind",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "L$  We resist conflict by narrowing our minds on the conflict instead of just letting it flow as an interesting necessary part of existence. Feelings are feedback and we should treat them as such.",
+        "toRaw": "L$  We resist conflict by narrowing our minds on the conflict instead of just letting it flow as an interesting necessary part of existence. Feelings are feedback and we should treat them as such.",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "L$ The nature of experience is refinement through struggle. If you are inexperienced, problems will be as problematic as the attention you give them.",
+        "toRaw": "L$ The nature of experience is refinement through struggle. If you are inexperienced, problems will be as problematic as the attention you give them.",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ The Art of Focus.md",
+        "to": "L$ We often interpret a situation as difficult when it isn't supposed to be any other way.  This gap of expectation and reality is what causes suffering. By expecting the pain, the gap is smaller. Your focus is engaged with the present moment",
+        "toRaw": "L$ We often interpret a situation as difficult when it isn't supposed to be any other way.  This gap of expectation and reality is what causes suffering. By expecting the pain, the gap is smaller. Your focus is engaged with the present moment",
+        "text": "",
+        "embed": false,
+        "internal": true
+      }
+    ],
+    "tasks": [
+      {
+        "description": "we doing this {dueDateReal: x, priority: {}} [due:: 2024-10-01] {dueDate: x, priority: {}} due:: true completion:: yes",
+        "checked": false,
+        "created": null,
+        "due": "2024-10-01",
+        "completion": null,
+        "scheduled": null,
+        "start": null,
+        "metadata": {
+          "due": "2024-10-01",
+          "tags": []
+        }
+      },
+      {
+        "description": "this is task2",
+        "checked": true,
+        "created": null,
+        "due": null,
+        "completion": null,
+        "scheduled": null,
+        "start": null,
+        "metadata": {}
+      }
+    ]
+  },
+  {
+    "_id": "8a80b5c3219ae159382ec447488066eced23622c",
+    "file_path": "/Users/dantekim/Documents/Projects/athena-beta/src/markdownFiles/B$ The Status Game.md",
+    "extension": "md",
+    "url_path": "B$%20The%20Status%20Game",
+    "filetype": null,
+    "metadata": {
+      "Author": "[[will storr]]",
+      "Created": "2024-01-06T00:00:00.000Z",
+      "Published": null,
+      "tags": [
+        "🧠/📚",
+        "📥/🟧"
+      ],
+      "Source": null,
+      "related": null,
+      "rating": null,
+      "tasks": []
+    },
+    "tags": [
+      "🧠/📚",
+      "📥/🟧"
+    ],
+    "links": [
+      {
+        "from": "B$ The Status Game.md",
+        "to": "https://auresnotes.com/the-status-game-summary-will-storr/",
+        "toRaw": "https://auresnotes.com/the-status-game-summary-will-storr/",
+        "text": "Aure's Notes",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ The Status Game.md",
+        "to": "https://www.blinkist.com/en/books/the-status-game-en",
+        "toRaw": "https://www.blinkist.com/en/books/the-status-game-en",
+        "text": "Blinkist",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ The Status Game.md",
+        "to": "will storr",
+        "toRaw": "will storr",
+        "text": "",
+        "embed": false,
+        "internal": true
+      }
+    ],
+    "tasks": []
+  },
+  {
+    "_id": "ccb966ec4cf7ee4aca60651b8e965e7de310c42a",
+    "file_path": "/Users/dantekim/Documents/Projects/athena-beta/src/markdownFiles/B$ The War Of Art.md",
+    "extension": "md",
+    "url_path": "B$%20The%20War%20Of%20Art",
+    "filetype": null,
+    "metadata": {
+      "Author": "[[Steven Pressfield]]",
+      "Created": "2020-08-22T00:00:00.000Z",
+      "Published": null,
+      "tags": [
+        "🧠/📚",
+        "📥/🟩"
+      ],
+      "Source": null,
+      "related": null,
+      "rating": 3.5,
+      "tasks": []
+    },
+    "tags": [
+      "🧠/📚",
+      "📥/🟩"
+    ],
+    "links": [
+      {
+        "from": "B$ The War Of Art.md",
+        "to": "Steven Pressfield",
+        "toRaw": "Steven Pressfield",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ The War Of Art.md",
+        "to": "Garyvee",
+        "toRaw": "Garyvee",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ The War Of Art.md",
+        "to": "Wearing multiple different hats",
+        "toRaw": "Wearing multiple different hats",
+        "text": "",
+        "embed": false,
+        "internal": true
+      }
+    ],
+    "tasks": []
+  },
+  {
+    "_id": "b8e323e473f9220379eac40b449f70e13f22a768",
+    "file_path": "/Users/dantekim/Documents/Projects/athena-beta/src/markdownFiles/B$ You Are Here.md",
+    "extension": "md",
+    "url_path": "B$%20You%20Are%20Here",
+    "filetype": null,
+    "metadata": {
+      "Author": "[[@Thich Nhat Hanh]]",
+      "Created": "2024-03-11T00:00:00.000Z",
+      "Published": 2010,
+      "Source": null,
+      "related": [
+        [
+          "meditation"
+        ]
+      ],
+      "rating": null,
+      "tags": [
+        "FFF3A3A6",
+        "insight"
+      ],
+      "tasks": []
+    },
+    "tags": [
+      "FFF3A3A6",
+      "insight"
+    ],
+    "links": [
+      {
+        "from": "B$ You Are Here.md",
+        "to": "@Thich Nhat Hanh",
+        "toRaw": "@Thich Nhat Hanh",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ You Are Here.md",
+        "to": "meditation",
+        "toRaw": "meditation",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ You Are Here.md",
+        "to": "Screen Shot 2022-11-12 at 12.46.00 PM.png",
+        "toRaw": "Screen Shot 2022-11-12 at 12.46.00 PM.png",
+        "text": "",
+        "embed": true,
+        "internal": true
+      }
+    ],
+    "tasks": []
+  },
+  {
+    "_id": "254107660f01e16ad9f0bbd79b29f1dd73a1d93a",
+    "file_path": "/Users/dantekim/Documents/Projects/athena-beta/src/markdownFiles/B$ Zero to One.md",
+    "extension": "md",
+    "url_path": "B$%20Zero%20to%20One",
+    "filetype": null,
+    "metadata": {
+      "Author": "[[Peter Thiel]]",
+      "Created": "2023-03-22T00:00:00.000Z",
+      "Finished": "2023-03-28T00:00:00.000Z",
+      "Published": null,
+      "tags": [
+        "🧠/📚",
+        "📥/🟩",
+        "flashcards"
+      ],
+      "Source": null,
+      "related": null,
+      "rating": 4.25,
+      "subject": "[[startups]]",
+      "tasks": []
+    },
+    "tags": [
+      "🧠/📚",
+      "📥/🟩",
+      "flashcards"
+    ],
+    "links": [
+      {
+        "from": "B$ Zero to One.md",
+        "to": "Peter Thiel",
+        "toRaw": "Peter Thiel",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ Zero to One.md",
+        "to": "startups",
+        "toRaw": "startups",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ Zero to One.md",
+        "to": "First Principles Thinking",
+        "toRaw": "First Principles Thinking",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ Zero to One.md",
+        "to": "Peter Thiel",
+        "toRaw": "Peter Thiel",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ Zero to One.md",
+        "to": "startup",
+        "toRaw": "startup",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ Zero to One.md",
+        "to": "@Friedrich Nietzsche",
+        "toRaw": "@Friedrich Nietzsche",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ Zero to One.md",
+        "to": "L$ the 4 startup principles after the dotcom bubble vs what Thiel believes to be more accurate principles ",
+        "toRaw": "L$ the 4 startup principles after the dotcom bubble vs what Thiel believes to be more accurate principles ",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ Zero to One.md",
+        "to": "Innovation Stack",
+        "toRaw": "Innovation Stack",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ Zero to One.md",
+        "to": "Aspergers Syndrome",
+        "toRaw": "Aspergers Syndrome",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ Zero to One.md",
+        "to": "L$ Characteristics of a Monopoly (Thiel)",
+        "toRaw": "L$ Characteristics of a Monopoly (Thiel)",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ Zero to One.md",
+        "to": "Jack Dorsey",
+        "toRaw": "Jack Dorsey",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ Zero to One.md",
+        "to": "@Malcolm Gladwell",
+        "toRaw": "@Malcolm Gladwell",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ Zero to One.md",
+        "to": "Outliers",
+        "toRaw": "Outliers",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ Zero to One.md",
+        "to": "philosophy",
+        "toRaw": "philosophy",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ Zero to One.md",
+        "to": "Plato",
+        "toRaw": "Plato",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ Zero to One.md",
+        "to": "Aristotle",
+        "toRaw": "Aristotle",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ Zero to One.md",
+        "to": "Epicurus",
+        "toRaw": "Epicurus",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ Zero to One.md",
+        "to": "Herbert Spencer",
+        "toRaw": "Herbert Spencer",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ Zero to One.md",
+        "to": "evolution",
+        "toRaw": "evolution",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ Zero to One.md",
+        "to": "Building an MVP is more of an experiment to figure out what startup to actually build",
+        "toRaw": "Building an MVP is more of an experiment to figure out what startup to actually build",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ Zero to One.md",
+        "to": "Correct contrarian thinking unlocks the power law, if you get certain things right, the details are negligible",
+        "toRaw": "Correct contrarian thinking unlocks the power law, if you get certain things right, the details are negligible",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ Zero to One.md",
+        "to": "L$ The 4 social trends have rooted our beliefs of secrets",
+        "toRaw": "L$ The 4 social trends have rooted our beliefs of secrets",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ Zero to One.md",
+        "to": "Paypal",
+        "toRaw": "Paypal",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ Zero to One.md",
+        "to": "Cryptonomican",
+        "toRaw": "Cryptonomican",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ Zero to One.md",
+        "to": "B$ To Sell Is Human",
+        "toRaw": "B$ To Sell Is Human",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ Zero to One.md",
+        "to": "Paypal",
+        "toRaw": "Paypal",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ Zero to One.md",
+        "to": "Palantir",
+        "toRaw": "Palantir",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ Zero to One.md",
+        "to": "L$ Computers will not replace humans, the best startups are when computers help humans solve hard problems",
+        "toRaw": "L$ Computers will not replace humans, the best startups are when computers help humans solve hard problems",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ Zero to One.md",
+        "to": "L$ The 7 Questions Thiel's believes every startup needs to answer",
+        "toRaw": "L$ The 7 Questions Thiel's believes every startup needs to answer",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ Zero to One.md",
+        "to": "Building an MVP is more of an experiment to figure out what startup to actually build",
+        "toRaw": "Building an MVP is more of an experiment to figure out what startup to actually build",
+        "text": "",
+        "embed": false,
+        "internal": true
+      }
+    ],
+    "tasks": []
+  },
+  {
+    "_id": "c4565266e37522eda6cf928e59ffc7fac3fefe4a",
+    "file_path": "/Users/dantekim/Documents/Projects/athena-beta/src/markdownFiles/.markdowndb/files.json",
+    "extension": "json",
+    "url_path": ".markdowndb/files.json",
+    "filetype": null,
+    "metadata": {},
+    "tags": [],
+    "links": [],
+    "tasks": []
+  }
+]
