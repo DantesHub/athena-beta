@@ -9,17 +9,14 @@ Source:
 related: 
 rating: 4.25
 ---
-- [ ] we doing this {dueDateReal: x, priority: {}} [due:: 2024-10-01]
-	- {dueDate: x, priority: {}}
-	- due:: true
-	- completion:: yes
+- [ ] we doing this {dueDateReal: x, priority: {}} [due:: 2024-10-01] 
 - [x] this is task2
 - [[Create a detailed plan, create the order, so you do not fall victim to entropy]]
 - [[V$ How To Get Ahead Of 99% Of People (In 6-12 Months)]]
 # Literature Notes
 - Use this to hold my mindmap, how I'm thinking about the information and also how I'm grouping it. 
 - Everything is a spectrum.
-	- - Black would not make sense without white, nor up without down, love without hate, happy without sad, matter without space, something without nothing, or finity without infinity ([View Highlight](https://read.readwise.io/read/01hqpmx3thwb8yfw0gpqxpnfxf))
+	- Black would not make sense without white, nor up without down, love without hate, happy without sad, matter without space, something without nothing, or finity without infinity ([View Highlight](https://read.readwise.io/read/01hqpmx3thwb8yfw0gpqxpnfxf))
 - [[L$ The unconscious mind can manage 11 million bits of information per second. This includes our habits, reactions, breathing. The conscious mind can only focus on a limited number things]]
 - Experimentation leads to true experience, and true experience is how you differentiate yourself in the marketplace
 	- [[E$ Experimentation leads to true experience. Trial and error will always outperform design. Action bias. Easiest way to figure out if something is viable or not is by doing it. We have an IQ of a 1000 when we do trial and error - Nasim Taleb]]

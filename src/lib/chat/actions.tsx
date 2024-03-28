@@ -51,6 +51,7 @@ import {
 
 import  GenTable  from "@/components/genUI/table"
 import  {GenTasks,Task}  from "@/components/genUI/tasks"
+import * as fs from 'fs';
 
 
 
@@ -420,13 +421,18 @@ async function submitUserMessage(content: string) {
       const res = await queryMDDB(input.query)
       const queryRes = res as Task[];
       
+      for (const task in queryRes) {
+        const records = await queryMDDB(`SELECT * FROM files WHERE _id = '${queryRes[task].file}';`)
+        if (!records[0].isEmpty) {
+          const path = records[0].url_path
+          queryRes[task].url = path
+        }
+      }
       // need to search for files and update url
 
       reply.done(
         <BotCard>
-            <div className="py-4">
-                <GenTasks tasks = {queryRes}/>
-            </div>
+          <GenTasks tasks = {queryRes}/>
         </BotCard>
       );
       
@@ -601,12 +607,38 @@ export const getUIStateFromAIState = (aiState: Chat) => {
 
 
 // initializeObsidianIndex()
-
 // Move the logic from unstable_onInit to a separate function
-
-
 // Call the initializeObsidianIndex function separately
 
 
+export  function editMarkdownLine(filePath: string, searchString: string, newContent: string): void {
+  try {
+    // Read the markdown file
+    const fileContent = fs.readFileSync(filePath, 'utf-8');
+    const lines = fileContent.split('\n');
+    console.log(fileContent, "itaewon class");
 
+    // Find the line that contains the search string
+    const lineIndex = lines.findIndex(line => line.includes(searchString));
 
+    // Check if the search string is found in any line
+    if (lineIndex === -1) {
+      console.log(`No line found containing the string: "${searchString}"`);
+      return;
+    }
+
+    // Update the content of the line containing the search string
+    lines[lineIndex] = newContent;
+
+    // Join the lines back into a single string
+    const updatedContent = lines.join('\n');
+
+    // Write the updated content back to the markdown file
+    fs.writeFileSync(filePath, updatedContent, 'utf-8');
+
+    console.log(`Line containing "${searchString}" updated successfully.`);
+  } catch (error) {
+    console.error('Error editing markdown file:', error);
+  }
+}
+  

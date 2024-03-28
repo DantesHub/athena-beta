@@ -59,7 +59,7 @@ export function PromptForm({
           }
         ])
         console.log("value before", value)
-        // Submit and get response message
+        
         // Submit and get response message
         try {
           const responseMessage = await submitUserMessage(value)
@@ -68,7 +68,6 @@ export function PromptForm({
         } catch (error) {
           console.error("Error submitting user message: ", error)
         }
-   
       }}
     >
 

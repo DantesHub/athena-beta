@@ -18,7 +18,7 @@ import { OpenAIEmbeddings } from "@langchain/openai";
 import { ObsidianLoader } from "langchain/document_loaders/fs/obsidian"; 
 import { Pinecone } from "@pinecone-database/pinecone";
 import { PineconeStore } from "@langchain/pinecone";
-import { useActions } from 'ai/rsc'
+import { useActions } from 'ai/rsc' 
 
 export interface ChatProps extends React.ComponentProps<'div'> {
     initialMessages?: Message[]

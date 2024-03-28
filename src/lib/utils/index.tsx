@@ -4,36 +4,7 @@ import type OpenAI from 'openai';
 import zodToJsonSchema from 'zod-to-json-schema';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-// import * as fs from 'fs';
 
-
-// export function editMarkdownLine(filePath: string, lineNumber: number, newContent: string): void {
-//     try {
-//       // Read the markdown file
-//       const fileContent = fs.readFileSync(filePath, 'utf-8');
-//       const lines = fileContent.split('\n');
-//         console.log(fileContent, "itaewon class")
-//       // Check if the line number is within the valid range
-//       if (lineNumber < 1 || lineNumber > lines.length) {
-//         console.log(`Invalid line number: ${lineNumber}`);
-//         return;
-//       }
-  
-//       // Update the content of the specified line
-//       lines[lineNumber - 1] = newContent;
-  
-//       // Join the lines back into a single string
-//       const updatedContent = lines.join('\n');
-  
-//       // Write the updated content back to the markdown file
-//       fs.writeFileSync(filePath, updatedContent, 'utf-8');
-  
-//       console.log(`Line ${lineNumber} updated successfully.`);
-//     } catch (error) {
-//       console.error('Error editing markdown file:', error);
-//     }
-//   }
-  
   
   const consumeStream = async (stream: ReadableStream) => {
   const reader = stream.getReader();
