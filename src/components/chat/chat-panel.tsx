@@ -10,18 +10,19 @@ import { useAIState, useActions, useUIState } from 'ai/rsc'
 import type { AI } from '@/lib/chat/actions'
 import { nanoid } from 'nanoid'
 import {UserMessage} from '@/components/genUI/message'
-
+import { sleep } from 'openai/core.mjs'
 export interface ChatPanelProps {
   id?: string
   title?: string
   input: string
   setInput: (value: string) => void
 }
+import { useEffect } from 'react'
 
 export function ChatPanel({ id, title, input, setInput }: ChatPanelProps) {
-  const [aiState, setAIState] = useAIState()
+  const [aiState, setAIState] = useAIState<typeof AI>()
   const [messages, setMessages] = useUIState<typeof AI>()
-  const { submitUserMessag, startMorningRoutine } = useActions()
+  const { submitUserMessage, startMorningRoutine } = useActions()
   const [shareDialogOpen, setShareDialogOpen] = React.useState(false)
 
   const exampleMessages = [
@@ -33,11 +34,13 @@ export function ChatPanel({ id, title, input, setInput }: ChatPanelProps) {
       subheading: 'Set the day up for success',
       message: `Hi, let's get this party started`
     },
+    
     {
       heading: 'Start Focus Session',
       subheading: 'DOGE in the stock market?',
       message: 'What is the price of DOGE in the stock market?'
     },
+
     {
       heading: 'Journal Observations',
       subheading: 'Brain dump / clear your head',
@@ -49,12 +52,23 @@ export function ChatPanel({ id, title, input, setInput }: ChatPanelProps) {
     {
       heading: 'What are some',
       subheading: `recent events about DOGE?`,
-      message: `What are some recent events about DOGE?`
+      message: `☀️ Start morning routine`
     }
   ]
-
+  useEffect(() => {
+    const runMorningRoutine = async () => {
+      if (aiState.inMorningSession) {
+        console.log(aiState.inMorningSession, "BROKIES1");
+        const responseMessage = await startMorningRoutine();
+        console.log("morning routine started");
+        setMessages(currentMessages => [...currentMessages, responseMessage]);
+      }
+    };
+  
+    runMorningRoutine();
+  }, [aiState.inMorningSession]);
   return (
-    <div className="fixed inset-x-0 bottom-0 w-full bg-gradient-to-b from-muted/30 from-0% to-muted/30 to-50% duration-300 ease-in-out animate-in dark:from-background/10 dark:from-10% dark:to-background/80 peer-[[data-state=open]]:group-[]:lg:pl-[250px] peer-[[data-state=open]]:group-[]:xl:pl-[300px]">
+    <div className="fixed mt-4 inset-x-0 bottom-0 w-full bg-gradient-to-b from-muted/30 from-0% to-muted/30 to-50% duration-300 ease-in-out animate-in dark:from-background/10 dark:from-10% dark:to-background/80 peer-[[data-state=open]]:group-[]:lg:pl-[250px] peer-[[data-state=open]]:group-[]:xl:pl-[300px]">
       {/* <ButtonScrollToBottom /> */}
 
       <div className="mx-auto sm:max-w-2xl sm:px-4">
@@ -75,8 +89,13 @@ export function ChatPanel({ id, title, input, setInput }: ChatPanelProps) {
                     }
                   ])
                   if (example.heading == "What are some") {
-                    await startMorningRoutine();
-                    console.log("morning routine started")
+                    setAIState(({...aiState, inMorningSession: true}))
+                    // const responseMessage = await startMorningRoutine();
+                    // console.log("morning routine started")
+                    // setMessages(currentMessages => [
+                    //   ...currentMessages,
+                    //   responseMessage
+                    // ])
                   } else {
                     const responseMessage = await submitUserMessage(
                       example.message
@@ -97,7 +116,7 @@ export function ChatPanel({ id, title, input, setInput }: ChatPanelProps) {
               </div>
             ))}
         </div>
-
+      
         {messages?.length >= 2 ? (
           <div className="flex h-12 items-center justify-center">
             <div className="flex space-x-2">
@@ -117,7 +136,20 @@ export function ChatPanel({ id, title, input, setInput }: ChatPanelProps) {
           </div>
         ) : null}
 
+      { aiState.inMorningSession && 
+              <div className="flex justify-center">
+                <button className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded mb-8"
+                 onClick={
+                  async () => {
+                    setAIState(({...aiState, inMorningSession: false}))
+                  }
+                }>
+                  End Morning Session
+                </button>
+              </div>
+        }
         <div className="space-y-4 border-t bg-background px-4 py-2 shadow-lg sm:rounded-t-xl sm:border md:py-4">
+     
           <PromptForm input={input} setInput={setInput} />
           <FooterText className="hidden sm:block" />
         </div>

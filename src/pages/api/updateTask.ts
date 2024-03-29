@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import type { NextApiRequest, NextApiResponse } from 'next'
 import * as fs from 'fs';
 import { request } from 'http';
 import { execSync } from 'child_process';
@@ -7,18 +7,18 @@ interface RequestData {
     filePath: string;
     searchString: string;
     newContent: string;
-  }
-export default async function POST(req: Request) {
+}
+   
+export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     let requestBody: RequestData | null = null;
     if (req.body instanceof ReadableStream) {
         const rawData = await req.body.getReader().read();
         const jsonString = new TextDecoder().decode(rawData.value);
         requestBody = JSON.parse(jsonString);
       } else if (typeof req.body === 'object') {
-
         requestBody = req.body;
         console.log("request body")
-      } else {
+      } else {        
         // Handle unexpected body type
         // res.status(400).json({ message: 'Invalid request body' });
         console.log("dummy")
@@ -75,22 +75,20 @@ export default async function POST(req: Request) {
             console.log(stdout, "we won boys")
           } catch (error) {
             console.error(`Error executing command: npx mddb`);
-          }
-  
+          }          
       } catch (error) {
         console.error('Error editing markdown file:', error);
       }
-    return NextResponse.json({ message: 'Task updated successfully' });
+    return res.json({ message: 'Task updated successfully' });
   } catch (error) {
     console.error('Error updating task:', error);
-    return NextResponse.json({ error: 'An error occurred while updating the task' }, { status: 500 });
+    return res.status(500).json({ error: 'An error occurred while updating the task' });
   }
 } else {
-    return NextResponse.json({ error: 'An error occurred while updating the task' }, { status: 500 });
-
+   return res.status(500).json({ error: 'An error occurred while updating the task' });
+  }
 }
-}
 
-export async function GET(request: NextRequest) {
-  return NextResponse.json({ error: 'Method not allowed' }, { status: 405 });
+export async function GET(request: NextApiRequest, response: NextApiResponse) {
+  return response.status(400).json({ error: 'Method not allowed' });
 }

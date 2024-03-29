@@ -9,7 +9,7 @@ export default function Home() {
   const id = nanoid()
 
   return (
-    <AI initialAIState={{ chatId: id, messages: [], obsidianVectorStore: null }}>
+    <AI initialAIState={{ chatId: id, messages: [], obsidianVectorStore: null, inMorningSession: false, inNightSession: false}}>
     <Chat id={id} session={undefined} missingKeys={[]} />
     </AI>
   );

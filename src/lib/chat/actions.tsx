@@ -51,9 +51,8 @@ import {
 
 import  GenTable  from "@/components/genUI/table"
 import  {GenTasks,Task}  from "@/components/genUI/tasks"
-import * as fs from 'fs';
-
-
+import { mainPrompt } from '@/lib/utils/prompts'
+import { MorningPanel } from '@/components/chat/morning-panel';
 
 async function setupVectorStore() {
   'use server'
@@ -172,11 +171,133 @@ async function initializeAutoGPT() {
   );
 }
 
-
+// *************************************************************************************
+// MORNING ROUTINE
  async function startMorningRoutine() {
   'use server'
-   await queryMDDB("SELECT files.*");
+  // get weekly goal if exists
+  const aiState = getMutableAIState<typeof AI>()
+  console.log(aiState.get().inMorningSession, "mother beeps44")
+  // let textStream: undefined | ReturnType<typeof createStreamableValue<string>>
+  // let textNode: undefined | React.ReactNode
+
+  const openai = new OpenAI({
+    apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY || ''  
+  })
+
+  const reply = createStreamableUI(
+    <BotMessage className="items-center">{spinner}</BotMessage>
+  );
+
+  aiState.update({
+    ...aiState.get(),
+    messages: [
+      ...aiState.get().messages,
+      {
+        id: nanoid(),
+        role: 'user',
+        content: "Start Morning Routine"
+      },
+    ],
+    inMorningSession: true
+  });
+
+  
+  var updatedPrompt = mainPrompt
+  updatedPrompt += "if user says start morning routine get all weekly goals and return the one with the latest date closest to today. If no weekly goals exist return null"
+
+  const completion = runOpenAICompletion(openai, {
+    model: "gpt-3.5-turbo-1106",
+    stream: true,
+    messages: [
+      {
+        role: "system",
+        content: updatedPrompt,
+      },
+      ...aiState.get().messages.map((info: any) => ({
+        role: info.role,
+        content: info.content,
+        name: info.name,
+      })),
+    ],
+    functions: [
+      {
+        name: "query_data",
+        description: `Gets the results for a query about the data`,
+        parameters: zOpenAIQueryResponse,
+      },
+      {
+        name: "query_tasks",
+        description: `Gets the results for a query about user tasks`,
+        parameters: zOpenAIQueryResponse,
+      },
+    ],
+    temperature: 0,
+  });
+  // get yesterdays daily goal if it hasnt been completed, what's todays goal? 
+  
+  // create summary from yesterday (mistakes, successes, etc, on going experiments, biggest learning) (3 sentences max)
+  
+  // show 4 buttons what do you want to do? (show checkmark if done)
+  // write a gratitude
+  // spaced repetition
+  // show affirmatinos 
+  // brain dump (if you're feeling negative emotions) 
+    // TASKS
+    completion.onFunctionCall(
+      "query_tasks",
+      async (input: OpenAIQueryResponse) => {
+        const { format, title, timeField } = input;
+        let query = input.query;
+        console.log("fetching tasks")
+        // // replace $sent_at with timestamp
+        // query = query.replace("$sent_at", "timestamp");
+  
+        // // replace `properties."timestamp"` with `timestamp`
+        // query = query.replace(/properties\."timestamp"/g, "timestamp");
+        const res = await queryMDDB(input.query)
+        const queryRes = res as Task[];
+        
+        for (const task in queryRes) {
+          const records = await queryMDDB(`SELECT * FROM files WHERE _id = '${queryRes[task].file}';`)
+          if (!records[0].isEmpty) {
+            const path = records[0].url_path
+            queryRes[task].url = path
+          }
+        }
+        // need to search for files and update url
+  
+        reply.done(
+          <div>
+          <p className="flex-1 space-y-2 text-2xl"  style={{ fontSize: '28px', margin: "4px" }}>Your Weekly Goals</p>
+          <hr className="my-3" style={{ opacity: 0.3, margin: "12px 0" }} />
+          <BotCard>
+            <GenTasks tasks = {queryRes}/>
+          </BotCard>
+          <MorningPanel/>
+          </div>
+        );
+        
+        aiState.done({
+          ...aiState.get(),
+          messages: [
+            ...aiState.get().messages,
+            {
+              id: nanoid(),
+              role: "function",
+              name: "query_tasks",
+              content: `[Results for query: ${query} with format: ${format} and title: ${title}]`,
+            },
+          ]
+        })
+      })
+  
+      return {
+        id: nanoid(),
+        display: reply.value
+      }
 }
+
 // TODO: -update vectorstore method
 async function runAutoGPT(content: string) {
   'use server'
@@ -229,7 +350,7 @@ async function runAutoGPT(content: string) {
   console.log(result, "result")
 
     const ui = render({
-      model: 'gpt-4',
+      model: 'gpt-3.5-turbo-1106',
       provider: openai,
       initial: <SpinnerMessage />,
       messages: [
@@ -246,12 +367,18 @@ async function runAutoGPT(content: string) {
           content: message.content,
           name: message.name
         })),
-
       ],    
+
       text: ({ content, done, delta }) => {
         if (!textStream) {
           textStream = createStreamableValue('')
-          textNode = <BotMessage>{content}</BotMessage>
+          textNode =      
+           <div>
+          <p className="flex-1 space-y-2 text-2xl"  style={{ fontSize: '28px' }}>Your Weekly Goals</p>
+          <hr className="" style={{ opacity: 0.3, margin: "4px" }} />
+          <BotMessage>{content}</BotMessage>
+          <MorningPanel/>
+          </div>
         }
 
         if (done) {
@@ -270,7 +397,6 @@ async function runAutoGPT(content: string) {
         } else {
           textStream.update(delta)
         }
-
         return textNode
       },
     })
@@ -286,17 +412,58 @@ async function runAutoGPT(content: string) {
 async function submitUserMessage(content: string) {
   'use server'
   const aiState = getMutableAIState<typeof AI>()
-
+  console.log(aiState.get().inMorningSession, "mother beeps45")
   let textStream: undefined | ReturnType<typeof createStreamableValue<string>>
   let textNode: undefined | React.ReactNode
 
   const openai = new OpenAI({
     apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY || ''  
   })
-
+  var finalContent = content
   const reply = createStreamableUI(
     <BotMessage className="items-center">{spinner}</BotMessage>
   );
+
+  if (aiState.get().inMorningSession) {
+    if (aiState.get().messages.length >= 2) {
+    const lastUserMessage = aiState.get().messages[aiState.get().messages.length - 1];
+    console.log(aiState.get().messages, "last user message")
+    if (lastUserMessage.content.includes("Writing Gratitude")) {
+        // update todays markdown file with gratitude
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        const hours = String(today.getHours()).padStart(2, '0');
+        const minutes = String(today.getMinutes()).padStart(2, '0');
+        const formattedDate = `${year}-${month}-${day}`;
+          try {
+            const response = await fetch('http://localhost:3000/api/insertMarkdown', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                filePath: `/Daily/${formattedDate}`,
+                newContent: `${hours}:${minutes} Gratitude Logged: \n - gratitude:: ${content} \n --------------------`,
+              }),
+            });
+        
+            if (response.ok) {
+              console.log('Markdown updated successfully');
+            } else {
+              console.error('Error inserting markdown:', response.statusText);
+            }
+          } catch (error) {
+            console.error('Error updating task:', error);
+          }
+
+        finalContent = `Today I'm grateful for ${content}. Don't ask me for anything else just say that you've noted my gratitude. `
+
+    }
+  }
+  }
+
 
   aiState.update({
     ...aiState.get(),
@@ -305,54 +472,11 @@ async function submitUserMessage(content: string) {
       {
         id: nanoid(),
         role: 'user',
-        content
+        content: finalContent
       }
     ]
   });
 
-    const prompt = `\
-    You are a bot that helps the user make sense of their notes and data. You generate graphs/tables or answers questions from a vector store that has embeddings about the users notes
-    
-    Messages inside [] means that it's a UI element or a user event. For example:
-    - "[Results for query: query with format: format and title: title and description: description. with data" means that a chart/table/number card is shown to that user.
-
-    The user has a markdown folder filled with all of their journals, book, video, podcast, movie, show notes. 
-          
-    You help users query their data.
-
-    There are two databases files, and tasks. 
-
-    Files:
-    url_path == title of the note. 
-
-    There is no table called notes, if user asks for something make sure to query from the files table
-    All notes have a property called metadata that contains properties: 
-    Author, 
-    Created,
-    tags, 
-    Source,
-    related 
-    rating (Decimal between 0-5)  
-
-    Tasks:
-    due,
-    created,
-    start,
-    checked (1 means done),
-    description
-
-    Example querys:
-    give me all books written by dan koe:
-    SELECT * FROM files WHERE metadata LIKE '%dan%koe%' COLLATE NOCASE;
-
-    open note War of Art:
-    SELECT * FROM files WHERE url_path LIKE '%war%of%art%' COLLATE NOCASE;
-    
-    or give me
-    The current time is ${new Date().toISOString()}.
-
-    Feel free to be creative with suggesting queries and follow ups based on what you think. Keep responses short and to the point.
-    `;
 
 
   const completion = runOpenAICompletion(openai, {
@@ -361,14 +485,14 @@ async function submitUserMessage(content: string) {
     messages: [
       {
         role: "system",
-        content: prompt,
+        content: mainPrompt,
       },
       ...aiState.get().messages.map((info: any) => ({
         role: info.role,
         content: info.content,
         name: info.name,
       })),
-    ],
+    ],    
     functions: [
       {
         name: "query_data",
@@ -385,11 +509,24 @@ async function submitUserMessage(content: string) {
   });
 
   completion.onTextContent(async (content: string, isFinal: boolean) => {   
-    reply.update(
-      <BotMessage>
-        {content}
-      </BotMessage>
-    );
+    if (finalContent.includes("Today I'm grateful for")) {
+      reply.update(      
+            <div>
+            <BotMessage>
+               {content}
+            </BotMessage>
+            <MorningPanel/>
+            </div>
+      );    
+    } else {
+      reply.update(      
+        <BotMessage>
+          {content}
+        </BotMessage>
+      );    
+    }
+   
+
     if (isFinal) {
       reply.done();
       aiState.done({
@@ -399,7 +536,7 @@ async function submitUserMessage(content: string) {
           {
             id: nanoid(),
             role: 'assistant',
-            content
+            content: content
           }
         ]
       })
@@ -431,6 +568,7 @@ async function submitUserMessage(content: string) {
       // need to search for files and update url
 
       reply.done(
+        
         <BotCard>
           <GenTasks tasks = {queryRes}/>
         </BotCard>
@@ -443,7 +581,7 @@ async function submitUserMessage(content: string) {
           {
             id: nanoid(),
             role: "function",
-            name: "query_data",
+            name: "query_tasks",
             content: `[Results for query: ${query} with format: ${format} and title: ${title}]`,
           },
         ]
@@ -535,7 +673,7 @@ export const AI = createAI<AIState, UIState>({
     startMorningRoutine
   },
   initialUIState: [],
-  initialAIState: { chatId: nanoid(), messages: [], obsidianVectorStore: null },
+  initialAIState: { chatId: nanoid(), messages: [], obsidianVectorStore: null, inMorningSession: false, inNightSession: false},
   unstable_onGetUIState: async () => {
     'use server'
 
@@ -586,6 +724,8 @@ export type AIState = {
   chatId: string
   messages: Message[],
   obsidianVectorStore: PineconeStore | null
+  inMorningSession: boolean
+  inNightSession: boolean
 }
 
 export const getUIStateFromAIState = (aiState: Chat) => {
@@ -606,39 +746,3 @@ export const getUIStateFromAIState = (aiState: Chat) => {
 };
 
 
-// initializeObsidianIndex()
-// Move the logic from unstable_onInit to a separate function
-// Call the initializeObsidianIndex function separately
-
-
-export  function editMarkdownLine(filePath: string, searchString: string, newContent: string): void {
-  try {
-    // Read the markdown file
-    const fileContent = fs.readFileSync(filePath, 'utf-8');
-    const lines = fileContent.split('\n');
-    console.log(fileContent, "itaewon class");
-
-    // Find the line that contains the search string
-    const lineIndex = lines.findIndex(line => line.includes(searchString));
-
-    // Check if the search string is found in any line
-    if (lineIndex === -1) {
-      console.log(`No line found containing the string: "${searchString}"`);
-      return;
-    }
-
-    // Update the content of the line containing the search string
-    lines[lineIndex] = newContent;
-
-    // Join the lines back into a single string
-    const updatedContent = lines.join('\n');
-
-    // Write the updated content back to the markdown file
-    fs.writeFileSync(filePath, updatedContent, 'utf-8');
-
-    console.log(`Line containing "${searchString}" updated successfully.`);
-  } catch (error) {
-    console.error('Error editing markdown file:', error);
-  }
-}
-  

@@ -3,7 +3,7 @@
 import * as React from 'react'
 import Textarea from 'react-textarea-autosize'
 
-import { useActions, useUIState } from 'ai/rsc'
+import { useActions, useUIState, useAIState } from 'ai/rsc'
 
 import { UserMessage } from '../genUI/message'
 import { type AI } from '@/lib/chat/actions'
@@ -26,6 +26,7 @@ export function PromptForm({
   setInput: (value: string) => void
 }) {
   const router = useRouter()
+  const [aiState, setAIState] = useAIState<typeof AI>()
   const { formRef, onKeyDown } = useEnterSubmit()
   const inputRef = React.useRef<HTMLTextAreaElement>(null)
   const { submitUserMessage, runAutoGPT } = useActions()
@@ -64,7 +65,11 @@ export function PromptForm({
         try {
           const responseMessage = await submitUserMessage(value)
           console.log("value after", value)
-          setMessages(currentMessages => [...currentMessages, responseMessage])
+          if (responseMessage.display === "Gratitude") {
+            console.log("logged gratitude")
+          } else {
+            setMessages(currentMessages => [...currentMessages, responseMessage])
+          }
         } catch (error) {
           console.error("Error submitting user message: ", error)
         }

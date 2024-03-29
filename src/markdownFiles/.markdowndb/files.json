@@ -1,5 +1,496 @@
 [
   {
+    "_id": "5e67bd8698aa75cdd257aedd81cbbb170ddaca25",
+    "file_path": "/Users/dantekim/Documents/Projects/athena-beta/src/markdownFiles/B$ How to Focus.md",
+    "extension": "md",
+    "url_path": "B$%20How%20to%20Focus",
+    "filetype": null,
+    "metadata": {
+      "Author": "[[@Dan Koe]]",
+      "Created": "2024-03-04T00:00:00.000Z",
+      "Published": null,
+      "tags": [
+        "🧠/📚",
+        "📥/🟧"
+      ],
+      "Source": null,
+      "related": null,
+      "rating": 4.25,
+      "tasks": [
+        {
+          "description": "we doing this {dueDateReal: x, priority: {}} [due:: 2024-10-01]",
+          "checked": false,
+          "created": null,
+          "due": "2024-10-01",
+          "completion": null,
+          "scheduled": null,
+          "start": null,
+          "metadata": {
+            "due": "2024-10-01",
+            "tags": []
+          }
+        },
+        {
+          "description": "this is task2",
+          "checked": true,
+          "created": null,
+          "due": null,
+          "completion": null,
+          "scheduled": null,
+          "start": null,
+          "metadata": {}
+        }
+      ]
+    },
+    "tags": [
+      "🧠/📚",
+      "📥/🟧"
+    ],
+    "links": [
+      {
+        "from": "B$ How to Focus.md",
+        "to": "https://read.readwise.io/read/01hqpmx3thwb8yfw0gpqxpnfxf",
+        "toRaw": "https://read.readwise.io/read/01hqpmx3thwb8yfw0gpqxpnfxf",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "https://read.readwise.io/read/01hpwy4ny2b3kmjy21tp76vy15",
+        "toRaw": "https://read.readwise.io/read/01hpwy4ny2b3kmjy21tp76vy15",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "https://read.readwise.io/read/01hq6a23p4je8t3a8gkvs6gtt9",
+        "toRaw": "https://read.readwise.io/read/01hq6a23p4je8t3a8gkvs6gtt9",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "https://read.readwise.io/read/01hq9vazxpng0pkjp9g9h09c40",
+        "toRaw": "https://read.readwise.io/read/01hq9vazxpng0pkjp9g9h09c40",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "https://read.readwise.io/read/01hq9v4rxmgqsbk98ympe1dhxa",
+        "toRaw": "https://read.readwise.io/read/01hq9v4rxmgqsbk98ympe1dhxa",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "https://read.readwise.io/read/01hqjxtzysdzqgkwq05mppmgcj",
+        "toRaw": "https://read.readwise.io/read/01hqjxtzysdzqgkwq05mppmgcj",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "https://read.readwise.io/read/01hqjxxce6tcq1ak3a3knbzd5s",
+        "toRaw": "https://read.readwise.io/read/01hqjxxce6tcq1ak3a3knbzd5s",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "https://read.readwise.io/read/01hqjy0pw5z4n8ngga8y8n7fee",
+        "toRaw": "https://read.readwise.io/read/01hqjy0pw5z4n8ngga8y8n7fee",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "https://read.readwise.io/read/01hqjy5jw1p1y9fsgnhx0zzr4r",
+        "toRaw": "https://read.readwise.io/read/01hqjy5jw1p1y9fsgnhx0zzr4r",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "https://read.readwise.io/read/01hqjy9hx4pqtm4yvcxz50tm5k",
+        "toRaw": "https://read.readwise.io/read/01hqjy9hx4pqtm4yvcxz50tm5k",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "https://read.readwise.io/read/01hqpmgym91mr40303wq08njg7",
+        "toRaw": "https://read.readwise.io/read/01hqpmgym91mr40303wq08njg7",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "https://read.readwise.io/read/01hqpmhz21wmym890sgcdwacyg",
+        "toRaw": "https://read.readwise.io/read/01hqpmhz21wmym890sgcdwacyg",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "https://read.readwise.io/read/01hqpn0ey4h9gkj6tkwt2h1sqk",
+        "toRaw": "https://read.readwise.io/read/01hqpn0ey4h9gkj6tkwt2h1sqk",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "https://read.readwise.io/read/01hqpmmcdxfba61eps88e84dnt",
+        "toRaw": "https://read.readwise.io/read/01hqpmmcdxfba61eps88e84dnt",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "https://read.readwise.io/read/01hqpn79jzys1damk1s14th7d7",
+        "toRaw": "https://read.readwise.io/read/01hqpn79jzys1damk1s14th7d7",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "https://read.readwise.io/read/01hqpn7q8h79bxpctvtezcyhbj",
+        "toRaw": "https://read.readwise.io/read/01hqpn7q8h79bxpctvtezcyhbj",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "https://read.readwise.io/read/01hqpn7gt5zv9ngss4fe69nqeg",
+        "toRaw": "https://read.readwise.io/read/01hqpn7gt5zv9ngss4fe69nqeg",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "https://read.readwise.io/read/01hqpn8rj3aem3w2p6sqf6sesc",
+        "toRaw": "https://read.readwise.io/read/01hqpn8rj3aem3w2p6sqf6sesc",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "https://read.readwise.io/read/01hqpn90pdxpr987jpgvfh9qjb",
+        "toRaw": "https://read.readwise.io/read/01hqpn90pdxpr987jpgvfh9qjb",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "https://read.readwise.io/read/01hqtrvbc8qht137gvnkqe1t89",
+        "toRaw": "https://read.readwise.io/read/01hqtrvbc8qht137gvnkqe1t89",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "https://read.readwise.io/read/01hqts31sx2qt7aeq7vdvm0qsr",
+        "toRaw": "https://read.readwise.io/read/01hqts31sx2qt7aeq7vdvm0qsr",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "https://read.readwise.io/read/01hr365n69v23dwahav236jbeb",
+        "toRaw": "https://read.readwise.io/read/01hr365n69v23dwahav236jbeb",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "https://read.readwise.io/read/01hr366m0v633xfdpwz6zrr5h2",
+        "toRaw": "https://read.readwise.io/read/01hr366m0v633xfdpwz6zrr5h2",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "https://read.readwise.io/read/01hr3674hh68kgm661q54x3vcz",
+        "toRaw": "https://read.readwise.io/read/01hr3674hh68kgm661q54x3vcz",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "https://read.readwise.io/read/01hr36mwms6s4662av6cck9rp4",
+        "toRaw": "https://read.readwise.io/read/01hr36mwms6s4662av6cck9rp4",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "https://read.readwise.io/read/01hr3709zemdr02z27251qgv97",
+        "toRaw": "https://read.readwise.io/read/01hr3709zemdr02z27251qgv97",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "https://read.readwise.io/read/01hr3756grb5jezvxsf2dw5967",
+        "toRaw": "https://read.readwise.io/read/01hr3756grb5jezvxsf2dw5967",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "https://read.readwise.io/read/01hr377q2c9a4wz9ch6ndbje9s",
+        "toRaw": "https://read.readwise.io/read/01hr377q2c9a4wz9ch6ndbje9s",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "https://read.readwise.io/read/01hrz5a623cynxeq6xhy1fpkz7",
+        "toRaw": "https://read.readwise.io/read/01hrz5a623cynxeq6xhy1fpkz7",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "https://read.readwise.io/read/01hrz5jcjq0cfwe5r8c4sddyjy",
+        "toRaw": "https://read.readwise.io/read/01hrz5jcjq0cfwe5r8c4sddyjy",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "https://read.readwise.io/read/01hrz6ezgc7w8z9sce5ze1desm",
+        "toRaw": "https://read.readwise.io/read/01hrz6ezgc7w8z9sce5ze1desm",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "https://read.readwise.io/read/01hrz6g82va52m23vyqn4cpamg",
+        "toRaw": "https://read.readwise.io/read/01hrz6g82va52m23vyqn4cpamg",
+        "text": "View Highlight",
+        "embed": false,
+        "internal": false
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "@Dan Koe",
+        "toRaw": "@Dan Koe",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "Create a detailed plan, create the order, so you do not fall victim to entropy",
+        "toRaw": "Create a detailed plan, create the order, so you do not fall victim to entropy",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "V$ How To Get Ahead Of 99% Of People (In 6-12 Months)",
+        "toRaw": "V$ How To Get Ahead Of 99% Of People (In 6-12 Months)",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "L$ The unconscious mind can manage 11 million bits of information per second. This includes our habits, reactions, breathing. The conscious mind can only focus on a limited number things",
+        "toRaw": "L$ The unconscious mind can manage 11 million bits of information per second. This includes our habits, reactions, breathing. The conscious mind can only focus on a limited number things",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "E$ Experimentation leads to true experience. Trial and error will always outperform design. Action bias. Easiest way to figure out if something is viable or not is by doing it. We have an IQ of a 1000 when we do trial and error - Nasim Taleb",
+        "toRaw": "E$ Experimentation leads to true experience. Trial and error will always outperform design. Action bias. Easiest way to figure out if something is viable or not is by doing it. We have an IQ of a 1000 when we do trial and error - Nasim Taleb",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "L$ We often interpret a situation as difficult when it isn't supposed to be any other way.  This gap of expectation and reality is what causes suffering. By expecting the pain, the gap is smaller. Your focus is engaged with the present moment",
+        "toRaw": "L$ We often interpret a situation as difficult when it isn't supposed to be any other way.  This gap of expectation and reality is what causes suffering. By expecting the pain, the gap is smaller. Your focus is engaged with the present moment",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "L$ Observe the patterns that are all around you and how they reflect in ur personal life.This is an impermanent state that will resolve with time and effort.",
+        "toRaw": "L$ Observe the patterns that are all around you and how they reflect in ur personal life.This is an impermanent state that will resolve with time and effort.",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "L$  We resist conflict by narrowing our minds on the conflict instead of just letting it flow as an interesting necessary part of existence. Feelings are feedback and we should treat them as such.",
+        "toRaw": "L$  We resist conflict by narrowing our minds on the conflict instead of just letting it flow as an interesting necessary part of existence. Feelings are feedback and we should treat them as such.",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "L$ Unit of Mind- Anything that can be given attention on any place of existence. All units are connected. A hand has no meaning without arm.These connections can also be horizontal, a cup wouldn't make sense without the hand to hold it",
+        "toRaw": "L$ Unit of Mind- Anything that can be given attention on any place of existence. All units are connected. A hand has no meaning without arm.These connections can also be horizontal, a cup wouldn't make sense without the hand to hold it",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "L$ One notable pattern within the infinite connections of units of mind- division and reunion",
+        "toRaw": "L$ One notable pattern within the infinite connections of units of mind- division and reunion",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "L$ The ideas in your mind divide and reunite we call this creativity. ",
+        "toRaw": "L$ The ideas in your mind divide and reunite we call this creativity. ",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "L$ Expectation vs Intention, people will go insane over the thought of hot weather but will go into a sauna without complaint == a conscious goal with clarity  on how to overcome ur problems.",
+        "toRaw": "L$ Expectation vs Intention, people will go insane over the thought of hot weather but will go into a sauna without complaint == a conscious goal with clarity  on how to overcome ur problems.",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "L$ The nature of experience is refinement through struggle. If you are inexperienced, problems will be as problematic as the attention you give them.",
+        "toRaw": "L$ The nature of experience is refinement through struggle. If you are inexperienced, problems will be as problematic as the attention you give them.",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "Nora App",
+        "toRaw": "Nora App",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "Gamification",
+        "toRaw": "Gamification",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "L$ The tactics, diet, or routine isn't what makes you feel good, it's the clarity, don't fall in love with this",
+        "toRaw": "L$ The tactics, diet, or routine isn't what makes you feel good, it's the clarity, don't fall in love with this",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "L$ You cannot solve a problem with the same level of mind that created it, you have to reframe - zoom out, which involves changing your perception which is a unit of mind",
+        "toRaw": "L$ You cannot solve a problem with the same level of mind that created it, you have to reframe - zoom out, which involves changing your perception which is a unit of mind",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "L$  We resist conflict by narrowing our minds on the conflict instead of just letting it flow as an interesting necessary part of existence. Feelings are feedback and we should treat them as such.",
+        "toRaw": "L$  We resist conflict by narrowing our minds on the conflict instead of just letting it flow as an interesting necessary part of existence. Feelings are feedback and we should treat them as such.",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "L$ The nature of experience is refinement through struggle. If you are inexperienced, problems will be as problematic as the attention you give them.",
+        "toRaw": "L$ The nature of experience is refinement through struggle. If you are inexperienced, problems will be as problematic as the attention you give them.",
+        "text": "",
+        "embed": false,
+        "internal": true
+      },
+      {
+        "from": "B$ How to Focus.md",
+        "to": "L$ We often interpret a situation as difficult when it isn't supposed to be any other way.  This gap of expectation and reality is what causes suffering. By expecting the pain, the gap is smaller. Your focus is engaged with the present moment",
+        "toRaw": "L$ We often interpret a situation as difficult when it isn't supposed to be any other way.  This gap of expectation and reality is what causes suffering. By expecting the pain, the gap is smaller. Your focus is engaged with the present moment",
+        "text": "",
+        "embed": false,
+        "internal": true
+      }
+    ],
+    "tasks": [
+      {
+        "description": "we doing this {dueDateReal: x, priority: {}} [due:: 2024-10-01]",
+        "checked": false,
+        "created": null,
+        "due": "2024-10-01",
+        "completion": null,
+        "scheduled": null,
+        "start": null,
+        "metadata": {
+          "due": "2024-10-01",
+          "tags": []
+        }
+      },
+      {
+        "description": "this is task2",
+        "checked": true,
+        "created": null,
+        "due": null,
+        "completion": null,
+        "scheduled": null,
+        "start": null,
+        "metadata": {}
+      }
+    ]
+  },
+  {
     "_id": "3ab66300c86dd1011e2f6002c587399891dbd244",
     "file_path": "/Users/dantekim/Documents/Projects/athena-beta/src/markdownFiles/B$ The Art of Focus.md",
     "extension": "md",
@@ -953,5 +1444,125 @@
     "tags": [],
     "links": [],
     "tasks": []
+  },
+  {
+    "_id": "7e2b1b876c0ccf9d654341f99e0cbea55cbcccca",
+    "file_path": "/Users/dantekim/Documents/Projects/athena-beta/src/markdownFiles/Daily/2024-03-29.md",
+    "extension": "md",
+    "url_path": "Daily/2024-03-29",
+    "filetype": null,
+    "metadata": {
+      "tags": [],
+      "tasks": [
+        {
+          "description": "Daily Goal Example 1 [due:: 2024-03-28] [priority:: 1]",
+          "checked": false,
+          "created": null,
+          "due": "2024-03-28",
+          "completion": null,
+          "scheduled": null,
+          "start": null,
+          "metadata": {
+            "due": "2024-03-28",
+            "priority": "1",
+            "tags": []
+          }
+        },
+        {
+          "description": "Daily Goal Example 2 [due:: 2024-03-28] [priority:: 2]",
+          "checked": false,
+          "created": null,
+          "due": "2024-03-28",
+          "completion": null,
+          "scheduled": null,
+          "start": null,
+          "metadata": {
+            "due": "2024-03-28",
+            "priority": "2",
+            "tags": []
+          }
+        }
+      ]
+    },
+    "tags": [],
+    "links": [],
+    "tasks": [
+      {
+        "description": "Daily Goal Example 1 [due:: 2024-03-28] [priority:: 1]",
+        "checked": false,
+        "created": null,
+        "due": "2024-03-28",
+        "completion": null,
+        "scheduled": null,
+        "start": null,
+        "metadata": {
+          "due": "2024-03-28",
+          "priority": "1",
+          "tags": []
+        }
+      },
+      {
+        "description": "Daily Goal Example 2 [due:: 2024-03-28] [priority:: 2]",
+        "checked": false,
+        "created": null,
+        "due": "2024-03-28",
+        "completion": null,
+        "scheduled": null,
+        "start": null,
+        "metadata": {
+          "due": "2024-03-28",
+          "priority": "2",
+          "tags": []
+        }
+      }
+    ]
+  },
+  {
+    "_id": "d9a43ec481bc06c8f75236ec53597c565446bbef",
+    "file_path": "/Users/dantekim/Documents/Projects/athena-beta/src/markdownFiles/Weekly/W12-2024.md",
+    "extension": "md",
+    "url_path": "Weekly/W12-2024",
+    "filetype": null,
+    "metadata": {
+      "tags": [
+        "weekly"
+      ],
+      "tasks": [
+        {
+          "description": "Weekly Goal Example 1 [due:: 2024-03-28] [priority:: 1]",
+          "checked": false,
+          "created": null,
+          "due": "2024-03-28",
+          "completion": null,
+          "scheduled": null,
+          "start": null,
+          "metadata": {
+            "due": "2024-03-28",
+            "priority": "1",
+            "tags": []
+          }
+        }
+      ]
+    },
+    "tags": [
+      "weekly"
+    ],
+    "links": [],
+    "tasks": [
+      {
+        "description": "Weekly Goal Example 1 [due:: 2024-03-28] [priority:: 1]",
+        "checked": false,
+        "created": null,
+        "due": "2024-03-28",
+        "completion": null,
+        "scheduled": null,
+        "start": null,
+        "metadata": {
+          "due": "2024-03-28",
+          "priority": "1",
+          "tags": []
+        }
+      }
+    ]
   }
 ]

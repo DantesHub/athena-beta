@@ -19,7 +19,17 @@ export type Task = {
     description: string
 }
 
+function parseTaskString(taskString: string): { title: string; metadata: Record<string, string> } {
+  const metadataRegex = /\[(\w+):: (.+?)\]/g;
+  const metadata: Record<string, string> = {};
 
+  let title = taskString.replace(metadataRegex, (match, key, value) => {
+    metadata[key] = value;
+    return '';
+  }).trim();
+
+  return { title, metadata };
+}
 /**
 
  * v0 by Vercel.
@@ -42,12 +52,6 @@ export function GenTasks({ tasks }: { tasks: Task[] }) {
           newLine = `- [x] ${task.description} `   
           searchString =  `- [ ] ${task.description} `             
         }
-        
-        // try {
-        // editMarkdownLine(task.url, task.description, newLine)
-        // } catch (error) {
-        //     console.error("Error updating task:", error);
-        // }
 
         try {
             const response = await fetch('/api/updateTask', {
@@ -77,9 +81,9 @@ export function GenTasks({ tasks }: { tasks: Task[] }) {
       <ul className="space-y-4">
       {tasks.map((task: Task) => {
             const metadata = JSON.parse(task.metadata);
-            const rating = metadata.rating;
-            const url = task.url
+            const url = decodeURIComponent(task.url)
             const title = task.description
+            const formattedTitle = parseTaskString(title);
             // if (!author && !rating) return null;
       return ( 
            <li key={task.description} className="flex items-start space-x-3">
@@ -91,8 +95,15 @@ export function GenTasks({ tasks }: { tasks: Task[] }) {
                 }
               />
           <div className="flex-1">
-            <p className="font-semibold">{title}</p>
-            <p className="text-sm text-gray-500">{url}</p>
+            <p className="font-semibold">{formattedTitle.title}</p>
+            <div className="flex justify-between">
+            <div className="flex">
+              <p className="text-sm text-gray-500 mr-2">Due: {" "}</p>
+              <p className="text-sm text-red-500">{formattedTitle.metadata.due}</p>
+              </div>
+              {/* <p className="text-sm text-gray-500">{formattedTitle.metadata.priority}</p> */}
+              <p className="text-sm text-gray-500">{url}</p>
+            </div>
           </div>
         </li>        
             )
