@@ -32,12 +32,12 @@ export function ChatPanel({ id, title, input, setInput }: ChatPanelProps) {
     {
       heading: 'Morning Routine',
       subheading: 'Set the day up for success',
-      message: `Hi, let's get this party started`
+      message: `☀️ Start morning routine`
     },
     
     {
       heading: 'Start Focus Session',
-      subheading: 'DOGE in the stock market?',
+      subheading: 'lock in',
       message: 'What is the price of DOGE in the stock market?'
     },
 
@@ -50,8 +50,8 @@ export function ChatPanel({ id, title, input, setInput }: ChatPanelProps) {
       // do you want me to extract insights to save for later? 
     },
     {
-      heading: 'What are some',
-      subheading: `recent events about DOGE?`,
+      heading: 'Night Routine',
+      subheading: `Reflect on the day`,
       message: `☀️ Start morning routine`
     }
   ]
@@ -68,7 +68,7 @@ export function ChatPanel({ id, title, input, setInput }: ChatPanelProps) {
     runMorningRoutine();
   }, [aiState.inMorningSession]);
   return (
-    <div className="fixed mt-4 inset-x-0 bottom-0 w-full bg-gradient-to-b from-muted/30 from-0% to-muted/30 to-50% duration-300 ease-in-out animate-in dark:from-background/10 dark:from-10% dark:to-background/80 peer-[[data-state=open]]:group-[]:lg:pl-[250px] peer-[[data-state=open]]:group-[]:xl:pl-[300px]">
+    <div className="fixed inset-x-0 bottom-0 w-full bg-gradient-to-b from-muted/30 from-0% to-muted/30 to-50% duration-300 ease-in-out animate-in dark:from-background/10 dark:from-10% dark:to-background/80 peer-[[data-state=open]]:group-[]:lg:pl-[250px] peer-[[data-state=open]]:group-[]:xl:pl-[300px]">
       {/* <ButtonScrollToBottom /> */}
 
       <div className="mx-auto sm:max-w-2xl sm:px-4">
@@ -88,7 +88,7 @@ export function ChatPanel({ id, title, input, setInput }: ChatPanelProps) {
                       display: <UserMessage>{example.message}</UserMessage>
                     }
                   ])
-                  if (example.heading == "What are some") {
+                  if (example.heading == "Morning Routine") {
                     setAIState(({...aiState, inMorningSession: true}))
                     // const responseMessage = await startMorningRoutine();
                     // console.log("morning routine started")

@@ -20,8 +20,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
         console.log("request body")
       } else {        
         // Handle unexpected body type
-        // res.status(400).json({ message: 'Invalid request body' });
-        console.log("dummy")
+        // res.status(400).json({ message: 'Invalid request body' })
         return;
       }
     
@@ -29,7 +28,6 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
        const { filePath, searchString, newContent } =  requestBody;
    
   try {
-    console.log("in the middle of the night")
     try {
         // Read the markdown file
         const decodedFilePath = decodeURIComponent(filePath);
@@ -38,7 +36,6 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
         console.log(process.cwd(), "***********************")
         const fileContent = fs.readFileSync(`/Users/dantekim/Documents/Projects/athena-beta/src/markdownFiles/${decodedFilePath}.md`, 'utf-8');
         const lines = fileContent.split('\n');
-        console.log(fileContent, "itaewon class");
         var updatedString =  searchString.replace(/\s+/g, '');
         // Find the line that contains the search string
         const lineIndex = lines.findIndex(line => line.replace(/\s+/g, '').includes(updatedString));

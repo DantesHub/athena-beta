@@ -130,6 +130,18 @@ async function queryMDDB(query: String) {
 }
 
 
+async function updateDaily(query: "") {
+  try {
+    const result = await mddbClient?.db.raw(query)
+    console.log("result", result)
+    return result;
+  } catch (error) {
+    console.error("Error executing query:", error);
+    throw error;
+  }
+}
+
+
 
 async function initializeAutoGPT() {
   'use server'
@@ -177,7 +189,6 @@ async function initializeAutoGPT() {
   'use server'
   // get weekly goal if exists
   const aiState = getMutableAIState<typeof AI>()
-  console.log(aiState.get().inMorningSession, "mother beeps44")
   // let textStream: undefined | ReturnType<typeof createStreamableValue<string>>
   // let textNode: undefined | React.ReactNode
 
@@ -424,6 +435,16 @@ async function submitUserMessage(content: string) {
     <BotMessage className="items-center">{spinner}</BotMessage>
   );
 
+  if (!cachedVectorStore) {
+    console.log("No cached vector store found, initializing...");
+    await setupVectorStore();
+  }
+
+  var searchResults
+  if(cachedVectorStore) {
+     searchResults = await cachedVectorStore?.similaritySearch(content, 3);
+  } 
+
   if (aiState.get().inMorningSession) {
     if (aiState.get().messages.length >= 2) {
     const lastUserMessage = aiState.get().messages[aiState.get().messages.length - 1];
@@ -460,9 +481,9 @@ async function submitUserMessage(content: string) {
 
         finalContent = `Today I'm grateful for ${content}. Don't ask me for anything else just say that you've noted my gratitude. `
 
-    }
-  }
-  }
+     }
+   }
+  } 
 
 
   aiState.update({
@@ -477,7 +498,8 @@ async function submitUserMessage(content: string) {
     ]
   });
 
-
+  var updatedPrompt = mainPrompt
+  updatedPrompt += "**IMPORTANT****** if user says something random like ate mcdonalds for dinner, or refactoring code, run function update_daily"
 
   const completion = runOpenAICompletion(openai, {
     model: "gpt-4-0125-preview",
@@ -485,7 +507,7 @@ async function submitUserMessage(content: string) {
     messages: [
       {
         role: "system",
-        content: mainPrompt,
+        content: updatedPrompt,
       },
       ...aiState.get().messages.map((info: any) => ({
         role: info.role,
@@ -502,6 +524,11 @@ async function submitUserMessage(content: string) {
       {
         name: "query_tasks",
         description: `Gets the results for a query about user tasks`,
+        parameters: zOpenAIQueryResponse,
+      },
+      {
+        name: "update_daily",
+        description: `Update Daily Note`,
         parameters: zOpenAIQueryResponse,
       },
     ],
@@ -587,6 +614,63 @@ async function submitUserMessage(content: string) {
         ]
       })
     })
+
+    completion.onFunctionCall(
+      "update_daily",
+      async (input: OpenAIQueryResponse) => {
+        const { format, title, timeField } = input;
+
+        // update todays markdown file with gratitude
+        console.log("updating daily")
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        const hours = String(today.getHours()).padStart(2, '0');
+        const minutes = String(today.getMinutes()).padStart(2, '0');
+        const formattedDate = `${year}-${month}-${day}`;
+          try {
+            const response = await fetch('http://localhost:3000/api/updateDaily', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                filePath: `/Daily/${formattedDate}`,
+                newContent: `${hours}:${minutes} ${content}`,
+              }),
+            });
+        
+            if (response.ok) {
+              console.log('Markdown updated successfully');
+            } else {
+              console.error('Error inserting markdown:', response.statusText);
+            }
+          } catch (error) {
+            console.error('Error updating task:', error);
+          }
+
+        // finalContent = `Today I'm grateful for ${content}. Don't ask me for anything else just say that you've noted my gratitude. ` 
+
+        reply.done(          
+          <BotCard>
+             Updated Note
+          </BotCard>  
+        );
+        
+        aiState.done({
+          ...aiState.get(),
+          messages: [
+            ...aiState.get().messages,
+            {
+              id: nanoid(),
+              role: "function",
+              name: "update_daily",
+              content: ``,
+            },
+          ]
+        })
+      })
 
    // NOTES
   completion.onFunctionCall(

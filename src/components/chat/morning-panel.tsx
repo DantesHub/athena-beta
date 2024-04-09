@@ -85,14 +85,7 @@ export function MorningPanel() {
                 },
               ]}));
   
-              if (example.heading === "What are some") {
-                const responseMessage = await startMorningRoutine();
-                console.log("morning routine started");
-                setMessages((currentMessages) => [
-                  ...currentMessages,
-                  responseMessage,
-                ]);
-              }
+      
             }}
           >
             <div className="flex items-center justify-between">
@@ -123,4 +116,3 @@ export function MorningPanel() {
   
   )
 }
-

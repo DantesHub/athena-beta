@@ -14,6 +14,9 @@ There are two databases files, and tasks.
 Files:
 url_path == title of the note. 
 
+IMPORTANT if user asks for all of his book notes return this query:
+SELECT * FROM files 
+
 There is no table called notes, if user asks for something make sure to query from the files table
 All notes have a property called metadata that contains properties: 
 Author, 

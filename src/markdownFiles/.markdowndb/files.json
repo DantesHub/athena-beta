@@ -1470,7 +1470,7 @@
         },
         {
           "description": "Daily Goal Example 2 [due:: 2024-03-28] [priority:: 2]",
-          "checked": false,
+          "checked": true,
           "created": null,
           "due": "2024-03-28",
           "completion": null,
@@ -1503,7 +1503,7 @@
       },
       {
         "description": "Daily Goal Example 2 [due:: 2024-03-28] [priority:: 2]",
-        "checked": false,
+        "checked": true,
         "created": null,
         "due": "2024-03-28",
         "completion": null,
@@ -1530,7 +1530,7 @@
       "tasks": [
         {
           "description": "Weekly Goal Example 1 [due:: 2024-03-28] [priority:: 1]",
-          "checked": false,
+          "checked": true,
           "created": null,
           "due": "2024-03-28",
           "completion": null,
@@ -1551,7 +1551,7 @@
     "tasks": [
       {
         "description": "Weekly Goal Example 1 [due:: 2024-03-28] [priority:: 1]",
-        "checked": false,
+        "checked": true,
         "created": null,
         "due": "2024-03-28",
         "completion": null,
