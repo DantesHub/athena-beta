@@ -1470,7 +1470,7 @@
         },
         {
           "description": "Daily Goal Example 2 [due:: 2024-03-28] [priority:: 2]",
-          "checked": true,
+          "checked": false,
           "created": null,
           "due": "2024-03-28",
           "completion": null,
@@ -1503,7 +1503,7 @@
       },
       {
         "description": "Daily Goal Example 2 [due:: 2024-03-28] [priority:: 2]",
-        "checked": true,
+        "checked": false,
         "created": null,
         "due": "2024-03-28",
         "completion": null,
@@ -1516,6 +1516,20 @@
         }
       }
     ]
+  },
+  {
+    "_id": "21b96a15d82f47838d0ab1dd05129a2bdb738298",
+    "file_path": "/Users/dantekim/Documents/Projects/athena-beta/src/markdownFiles/Daily/2024-04-09.md",
+    "extension": "md",
+    "url_path": "Daily/2024-04-09",
+    "filetype": null,
+    "metadata": {
+      "tags": [],
+      "tasks": []
+    },
+    "tags": [],
+    "links": [],
+    "tasks": []
   },
   {
     "_id": "d9a43ec481bc06c8f75236ec53597c565446bbef",

@@ -52,7 +52,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
             // Write the updated content back to the markdown file
             fs.writeFileSync(`/Users/dantekim/Documents/Projects/athena-beta/src/markdownFiles/${decodedFilePath}.md`, updatedContent, 'utf-8');
       
-            console.log('New content inserted above the dashed line successfully.');
+            console.log('New content inserted above the dashed line successfully.', newContent);
       
             // ...
       

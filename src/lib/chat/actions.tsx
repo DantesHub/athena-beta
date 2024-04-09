@@ -20,9 +20,7 @@ import {
   Events
 } from '@/components/genUI/events'
 import { nanoid } from 'ai';
-import {
-  spinner
-} from '@/components/genUI/spinner'
+import { spinner } from '@/components/genUI/spinner'
 import { z } from "zod"
 import { SpinnerMessage, UserMessage, SystemMessage } from '@/components/genUI/message'
 import { StoredMessage, mapStoredMessagesToChatMessages } from "@langchain/core/messages";
@@ -38,22 +36,17 @@ import { AutoGPT } from "langchain/experimental/autogpt";
 import { initializeObsidianIndex } from "@/app/actions";
 let cachedVectorStore: PineconeStore | null = null;
 let myGPT: AutoGPT | null = null;
-let mddbClient: MarkdownDB | null = null;
+export let mddbClient: MarkdownDB | null = null;
 import { SerpAPI } from "@langchain/community/tools/serpapi";
 import { ReadFileTool, WriteFileTool } from "langchain/tools";
 import {MemoryVectorStore} from "langchain/vectorstores/memory";
-import {
-  runAsyncFnWithoutBlocking,
-  sleep,
-  formatNumber,
-  runOpenAICompletion,
-} from'@/lib/utils'
-
+import { runOpenAICompletion } from'@/lib/utils'
 import  GenTable  from "@/components/genUI/table"
-import  {GenTasks,Task}  from "@/components/genUI/tasks"
 import { mainPrompt } from '@/lib/utils/prompts'
 import { MorningPanel } from '@/components/chat/morning-panel';
-
+import { updateDailyAPI } from './tasks';
+import { startMorningRoutine } from './morning';
+import { getTodayFormattedDate, getTime } from '../utils/data-helper';
 async function setupVectorStore() {
   'use server'
   if (cachedVectorStore) return
@@ -114,7 +107,7 @@ async function initializeMDDB() {
   }
 }
 
-async function queryMDDB(query: String) {
+export async function queryMDDB(query: String) {
   if (!mddbClient) {
      await initializeMDDB();
   }
@@ -128,7 +121,6 @@ async function queryMDDB(query: String) {
     throw error;
   }
 }
-
 
 async function updateDaily(query: "") {
   try {
@@ -183,131 +175,7 @@ async function initializeAutoGPT() {
   );
 }
 
-// *************************************************************************************
-// MORNING ROUTINE
- async function startMorningRoutine() {
-  'use server'
-  // get weekly goal if exists
-  const aiState = getMutableAIState<typeof AI>()
-  // let textStream: undefined | ReturnType<typeof createStreamableValue<string>>
-  // let textNode: undefined | React.ReactNode
 
-  const openai = new OpenAI({
-    apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY || ''  
-  })
-
-  const reply = createStreamableUI(
-    <BotMessage className="items-center">{spinner}</BotMessage>
-  );
-
-  aiState.update({
-    ...aiState.get(),
-    messages: [
-      ...aiState.get().messages,
-      {
-        id: nanoid(),
-        role: 'user',
-        content: "Start Morning Routine"
-      },
-    ],
-    inMorningSession: true
-  });
-
-  
-  var updatedPrompt = mainPrompt
-  updatedPrompt += "if user says start morning routine get all weekly goals and return the one with the latest date closest to today. If no weekly goals exist return null"
-
-  const completion = runOpenAICompletion(openai, {
-    model: "gpt-3.5-turbo-1106",
-    stream: true,
-    messages: [
-      {
-        role: "system",
-        content: updatedPrompt,
-      },
-      ...aiState.get().messages.map((info: any) => ({
-        role: info.role,
-        content: info.content,
-        name: info.name,
-      })),
-    ],
-    functions: [
-      {
-        name: "query_data",
-        description: `Gets the results for a query about the data`,
-        parameters: zOpenAIQueryResponse,
-      },
-      {
-        name: "query_tasks",
-        description: `Gets the results for a query about user tasks`,
-        parameters: zOpenAIQueryResponse,
-      },
-    ],
-    temperature: 0,
-  });
-  // get yesterdays daily goal if it hasnt been completed, what's todays goal? 
-  
-  // create summary from yesterday (mistakes, successes, etc, on going experiments, biggest learning) (3 sentences max)
-  
-  // show 4 buttons what do you want to do? (show checkmark if done)
-  // write a gratitude
-  // spaced repetition
-  // show affirmatinos 
-  // brain dump (if you're feeling negative emotions) 
-    // TASKS
-    completion.onFunctionCall(
-      "query_tasks",
-      async (input: OpenAIQueryResponse) => {
-        const { format, title, timeField } = input;
-        let query = input.query;
-        console.log("fetching tasks")
-        // // replace $sent_at with timestamp
-        // query = query.replace("$sent_at", "timestamp");
-  
-        // // replace `properties."timestamp"` with `timestamp`
-        // query = query.replace(/properties\."timestamp"/g, "timestamp");
-        const res = await queryMDDB(input.query)
-        const queryRes = res as Task[];
-        
-        for (const task in queryRes) {
-          const records = await queryMDDB(`SELECT * FROM files WHERE _id = '${queryRes[task].file}';`)
-          if (!records[0].isEmpty) {
-            const path = records[0].url_path
-            queryRes[task].url = path
-          }
-        }
-        // need to search for files and update url
-  
-        reply.done(
-          <div>
-          <p className="flex-1 space-y-2 text-2xl"  style={{ fontSize: '28px', margin: "4px" }}>Your Weekly Goals</p>
-          <hr className="my-3" style={{ opacity: 0.3, margin: "12px 0" }} />
-          <BotCard>
-            <GenTasks tasks = {queryRes}/>
-          </BotCard>
-          <MorningPanel/>
-          </div>
-        );
-        
-        aiState.done({
-          ...aiState.get(),
-          messages: [
-            ...aiState.get().messages,
-            {
-              id: nanoid(),
-              role: "function",
-              name: "query_tasks",
-              content: `[Results for query: ${query} with format: ${format} and title: ${title}]`,
-            },
-          ]
-        })
-      })
-  
-      return {
-        id: nanoid(),
-        display: reply.value
-      }
-}
 
 // TODO: -update vectorstore method
 async function runAutoGPT(content: string) {
@@ -451,13 +319,8 @@ async function submitUserMessage(content: string) {
     console.log(aiState.get().messages, "last user message")
     if (lastUserMessage.content.includes("Writing Gratitude")) {
         // update todays markdown file with gratitude
-        const today = new Date();
-        const year = today.getFullYear();
-        const month = String(today.getMonth() + 1).padStart(2, '0');
-        const day = String(today.getDate()).padStart(2, '0');
-        const hours = String(today.getHours()).padStart(2, '0');
-        const minutes = String(today.getMinutes()).padStart(2, '0');
-        const formattedDate = `${year}-${month}-${day}`;
+        const formattedDate = getTodayFormattedDate();
+        const time = getTime();
           try {
             const response = await fetch('http://localhost:3000/api/insertMarkdown', {
               method: 'POST',
@@ -466,7 +329,7 @@ async function submitUserMessage(content: string) {
               },
               body: JSON.stringify({
                 filePath: `/Daily/${formattedDate}`,
-                newContent: `${hours}:${minutes} Gratitude Logged: \n - gratitude:: ${content} \n --------------------`,
+                newContent: `${time} Gratitude Logged: \n - gratitude:: ${content} \n --------------------`,
               }),
             });
         
@@ -499,7 +362,7 @@ async function submitUserMessage(content: string) {
   });
 
   var updatedPrompt = mainPrompt
-  updatedPrompt += "**IMPORTANT****** if user says something random like ate mcdonalds for dinner, or refactoring code, run function update_daily"
+  updatedPrompt += "**IMPORTANT****** if user says something random like ate mcdonalds for dinner, or refactoring code, run function update_daily. Do not run this function if they wrote about what they're grateeful for."
 
   const completion = runOpenAICompletion(openai, {
     model: "gpt-4-0125-preview",
@@ -553,7 +416,6 @@ async function submitUserMessage(content: string) {
       );    
     }
    
-
     if (isFinal) {
       reply.done();
       aiState.done({
@@ -570,88 +432,12 @@ async function submitUserMessage(content: string) {
     }
   });
 
-  // TASKS
-  completion.onFunctionCall(
-    "query_tasks",
-    async (input: OpenAIQueryResponse) => {
-      const { format, title, timeField } = input;
-      let query = input.query;
-      console.log("fetching tasks")
-      // // replace $sent_at with timestamp
-      // query = query.replace("$sent_at", "timestamp");
-
-      // // replace `properties."timestamp"` with `timestamp`
-      // query = query.replace(/properties\."timestamp"/g, "timestamp");
-      const res = await queryMDDB(input.query)
-      const queryRes = res as Task[];
-      
-      for (const task in queryRes) {
-        const records = await queryMDDB(`SELECT * FROM files WHERE _id = '${queryRes[task].file}';`)
-        if (!records[0].isEmpty) {
-          const path = records[0].url_path
-          queryRes[task].url = path
-        }
-      }
-      // need to search for files and update url
-
-      reply.done(
-        
-        <BotCard>
-          <GenTasks tasks = {queryRes}/>
-        </BotCard>
-      );
-      
-      aiState.done({
-        ...aiState.get(),
-        messages: [
-          ...aiState.get().messages,
-          {
-            id: nanoid(),
-            role: "function",
-            name: "query_tasks",
-            content: `[Results for query: ${query} with format: ${format} and title: ${title}]`,
-          },
-        ]
-      })
-    })
 
     completion.onFunctionCall(
       "update_daily",
       async (input: OpenAIQueryResponse) => {
-        const { format, title, timeField } = input;
-
-        // update todays markdown file with gratitude
-        console.log("updating daily")
-        const today = new Date();
-        const year = today.getFullYear();
-        const month = String(today.getMonth() + 1).padStart(2, '0');
-        const day = String(today.getDate()).padStart(2, '0');
-        const hours = String(today.getHours()).padStart(2, '0');
-        const minutes = String(today.getMinutes()).padStart(2, '0');
-        const formattedDate = `${year}-${month}-${day}`;
-          try {
-            const response = await fetch('http://localhost:3000/api/updateDaily', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                filePath: `/Daily/${formattedDate}`,
-                newContent: `${hours}:${minutes} ${content}`,
-              }),
-            });
-        
-            if (response.ok) {
-              console.log('Markdown updated successfully');
-            } else {
-              console.error('Error inserting markdown:', response.statusText);
-            }
-          } catch (error) {
-            console.error('Error updating task:', error);
-          }
-
+        updateDailyAPI(content);
         // finalContent = `Today I'm grateful for ${content}. Don't ask me for anything else just say that you've noted my gratitude. ` 
-
         reply.done(          
           <BotCard>
              Updated Note
@@ -678,12 +464,6 @@ async function submitUserMessage(content: string) {
     async (input: OpenAIQueryResponse) => {
       const { format, title, timeField } = input;
       let query = input.query;
-      
-      // // replace $sent_at with timestamp
-      // query = query.replace("$sent_at", "timestamp");
-
-      // // replace `properties."timestamp"` with `timestamp`
-      // query = query.replace(/properties\."timestamp"/g, "timestamp");
       const res = await queryMDDB(input.query)
       const queryRes = res as QueryResult[];
 
@@ -716,7 +496,7 @@ async function submitUserMessage(content: string) {
   }
 }
 
-type OpenAIQueryResponse = z.infer<typeof zOpenAIQueryResponse>;
+export type OpenAIQueryResponse = z.infer<typeof zOpenAIQueryResponse>;
 // {
 //   _id: 'ccb966ec4cf7ee4aca60651b8e965e7de310c42a',
 //   file_path: '/Users/dantekim/Documents/Projects/athena-beta/src/markdownFiles/B$ The War Of Art.md',
@@ -737,7 +517,7 @@ export type QueryResult = {
   tasks: string;
 };
 
-const zOpenAIQueryResponse = z.object({
+export const zOpenAIQueryResponse = z.object({
   query: z.string().describe(`Creates a SQLite Query for the given query.`),
   format: z.enum(["table, graph"]).describe("The format of the result"),
   title: z.string().optional().describe("The title of the chart"),

@@ -10,7 +10,6 @@ interface RequestData {
 }
    
 export default async function POST(req: NextApiRequest, res: NextApiResponse) {
-    console.log("calling markey")
     let requestBody: RequestData | null = null;
     if (req.body instanceof ReadableStream) {
         const rawData = await req.body.getReader().read();
